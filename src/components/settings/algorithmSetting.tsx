@@ -38,7 +38,7 @@ const useStyles = makeStyles((theme: Theme) =>
   }),
 );
 
-export default function AlgorithmSetting() {
+const AlgorithmSetting = (props: any) => {
     const classes = useStyles();
 
     const [chosenAlgorithm, setAlgorithm] = React.useState('');
@@ -75,7 +75,7 @@ export default function AlgorithmSetting() {
             <ListItem >
               <ListItemIcon>
                 <Tooltip title="Add Node">
-                  <AddIcon className={classes.addNodeIcon} aria-label="Add Node" onClick={() => alert('oi')}/>
+                  <AddIcon className={classes.addNodeIcon} aria-label="Add Node" onClick={props.addNode}/>
                 </Tooltip>
               </ListItemIcon>
               <ListItemIcon>
@@ -99,3 +99,5 @@ export default function AlgorithmSetting() {
         </div>
     );
 }
+
+export default AlgorithmSetting;

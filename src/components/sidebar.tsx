@@ -77,7 +77,7 @@ const useStyles = makeStyles((theme: Theme) =>
   }),
 );
 
-export default function SideBar() {
+const SideBar = (props: any) => {
   const classes = useStyles();
   const theme = useTheme();
 
@@ -131,9 +131,11 @@ export default function SideBar() {
         </div>
         <Divider />
         <div className={classes.algorithmSetting}>
-          <AlgorithmSetting />
+          <AlgorithmSetting addNode={props.addNode}/>
         </div>
       </Drawer>
     </div>
   );
 }
+
+export default SideBar;
