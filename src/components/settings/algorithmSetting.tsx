@@ -15,6 +15,7 @@ import Dialog from '@material-ui/core/Dialog';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Switch from '@material-ui/core/Switch';
 import Button from '@material-ui/core/Button';
+import DialogActions from '@material-ui/core/DialogActions';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -66,8 +67,8 @@ interface SimpleDialogProps {
 }
 
 interface IAddEdge {
-  fromNode: number;
-  toNode: number;
+  fromNode: string;
+  toNode: string;
   isDirected: boolean;
 }
 
@@ -93,8 +94,16 @@ function SimpleDialog(props: SimpleDialogProps) {
     setDirection(event.target.checked);
   };
 
-  const handleClose = () => {
-    onClose({fromNode: +chosenFromNode, toNode: +chosenToNode, isDirected: isDirected});
+  const handleClose = (e: any) => {
+    console.log(e.target.innerText);
+    if (e.target.innerText === 'ADD') {
+      onClose({fromNode: chosenFromNode, toNode: chosenToNode, isDirected: isDirected});
+    } else {
+      onClose({fromNode: '', toNode: '', isDirected: isDirected});
+    }
+    setFromNode('');
+    setToNode('');
+    setDirection(true);
   };
 
   let nodeOptions = []
@@ -139,6 +148,14 @@ function SimpleDialog(props: SimpleDialogProps) {
         className={classes.edgeDirectionInterruptor}
         label="Directed Edge"
       />
+      <DialogActions>
+        <Button onClick={(e) => handleClose(e)} color="primary">
+          Close
+        </Button>
+        <Button onClick={(e) => handleClose(e)} color="primary" autoFocus>
+          Add
+        </Button>
+      </DialogActions>
     </Dialog>
   );
 }
@@ -166,7 +183,9 @@ const AlgorithmSetting = (props: any) => {
 
     const handleCloseDialog = (edge: IAddEdge) => {
       setOpenDialog(false);
-      props.addEdge(edge.fromNode, edge.toNode, edge.isDirected);
+      if (edge.fromNode !== '' && edge.toNode !== '') {
+        props.addEdge(+edge.fromNode, +edge.toNode, edge.isDirected);
+      }
     };
 
     const handleExecuteAlgorithm = () => {
