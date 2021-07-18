@@ -1,6 +1,7 @@
 import React from 'react';
 
 import SideBar from './sidebar';
+import AlgorithmChoose from '../domain/algorithmChoose';
 
 import greuler from "greuler";
 
@@ -11,6 +12,7 @@ class Home extends React.Component<any, any> {
 
         this.addNode = this.addNode.bind(this);
         this.addEdge = this.addEdge.bind(this);
+        this.clearGraph = this.clearGraph.bind(this);
 
         this.state = {
             graphStruct: null
@@ -58,6 +60,21 @@ class Home extends React.Component<any, any> {
         });
     }
 
+    executeGraphVisualization(executionOption: AlgorithmChoose) {
+        alert(executionOption.algorithm);
+        alert(executionOption.startingNode);
+    }
+
+    clearGraph() {
+        let oldGraphState = this.state.graphStruct;
+        
+        oldGraphState.graph.removeNodesByFn((n: { id: number; }) => n.id >= 0);
+
+        this.setState({
+            graphStruct: oldGraphState.update()
+        });
+    }
+
     getElementByIdAsync = (id: string) => new Promise(resolve => {
         const getElement = () => {
             const element = document.getElementById(id);
@@ -74,7 +91,13 @@ class Home extends React.Component<any, any> {
         return (
             <div>
                 <div>
-                    <SideBar nodes={this.state.graphStruct !== null ? this.state.graphStruct.graph.nodes.length : 0} addEdge={this.addEdge} addNode={this.addNode}/>
+                    <SideBar 
+                        executeVisualization={this.executeGraphVisualization}
+                        clearGraph={this.clearGraph}
+                        nodes={this.state.graphStruct !== null ? this.state.graphStruct.graph.nodes.length : 0} 
+                        addEdge={this.addEdge} 
+                        addNode={this.addNode}
+                    />
                 </div>
                 <div style={{
                     position: 'absolute', left: '50%', top: '50%',

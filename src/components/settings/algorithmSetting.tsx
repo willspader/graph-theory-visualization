@@ -14,12 +14,14 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 import Dialog from '@material-ui/core/Dialog';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Switch from '@material-ui/core/Switch';
+import Button from '@material-ui/core/Button';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     formControl: {
       margin: theme.spacing(1),
       minWidth: 135,
+      marginLeft: theme.spacing(6.5)
     },
     formControlAddEdge: {
       margin: theme.spacing(1),
@@ -39,7 +41,8 @@ const useStyles = makeStyles((theme: Theme) =>
       marginBottom: theme.spacing(1),
       color: "black",
       fontSize: 35,
-      cursor: "pointer"
+      cursor: "pointer",
+      marginLeft: theme.spacing(6.5)
     },
     addEdgeIcon: {
       marginTop: theme.spacing(3),
@@ -48,6 +51,10 @@ const useStyles = makeStyles((theme: Theme) =>
       color: "black",
       fontSize: 30,
       cursor: "pointer"
+    },
+    executeAlgorithmBtn: {
+      marginTop: theme.spacing(3),
+      marginLeft: theme.spacing(3)
     }
   }),
 );
@@ -162,6 +169,11 @@ const AlgorithmSetting = (props: any) => {
       props.addEdge(edge.fromNode, edge.toNode, edge.isDirected);
     };
 
+    const handleExecuteAlgorithm = () => {
+      const executionOption = { algorithm: chosenAlgorithm, startingNode: chosenStartingNode }
+      props.executeVisualization(executionOption);
+    }
+
     const algorithms = [Algorithms.BFS, Algorithms.DFS]
     let algorithmOptions = []
     for (let i = 0; i < algorithms.length; i++) {
@@ -208,6 +220,14 @@ const AlgorithmSetting = (props: any) => {
                 {nodeOptions}
             </Select>
           </FormControl>
+          <div>
+            <Button className={classes.executeAlgorithmBtn} variant="contained" onClick={() => {props.clearGraph()}}>
+              Clear
+            </Button>
+            <Button className={classes.executeAlgorithmBtn} variant="contained" color="primary" onClick={() => handleExecuteAlgorithm()}>
+              Execute
+            </Button>
+          </div>
           <SimpleDialog nodes={props.nodes} open={openDialog} onClose={handleCloseDialog} />
         </div>
     );

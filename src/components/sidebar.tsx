@@ -70,9 +70,6 @@ const useStyles = makeStyles((theme: Theme) =>
         duration: theme.transitions.duration.enteringScreen,
       }),
       marginLeft: 0,
-    },
-    algorithmSetting: {
-      marginLeft: theme.spacing(6.5)
     }
   }),
 );
@@ -130,8 +127,14 @@ const SideBar = (props: any) => {
           </IconButton>
         </div>
         <Divider />
-        <div className={classes.algorithmSetting}>
-          <AlgorithmSetting nodes={props.nodes} addEdge={props.addEdge} addNode={props.addNode}/>
+        <div>
+          <AlgorithmSetting 
+            executeVisualization={props.executeVisualization}
+            clearGraph={props.clearGraph}
+            nodes={props.nodes} 
+            addEdge={props.addEdge} 
+            addNode={props.addNode}
+          />
         </div>
       </Drawer>
     </div>
