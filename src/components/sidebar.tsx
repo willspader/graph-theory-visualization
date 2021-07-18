@@ -131,7 +131,7 @@ const SideBar = (props: any) => {
         </div>
         <Divider />
         <div className={classes.algorithmSetting}>
-          <AlgorithmSetting addNode={props.addNode}/>
+          <AlgorithmSetting nodes={props.nodes} addEdge={props.addEdge} addNode={props.addNode}/>
         </div>
       </Drawer>
     </div>
