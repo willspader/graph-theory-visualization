@@ -16,6 +16,7 @@ import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Switch from '@material-ui/core/Switch';
 import Button from '@material-ui/core/Button';
 import DialogActions from '@material-ui/core/DialogActions';
+import TextField from '@material-ui/core/TextField';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -70,6 +71,7 @@ interface IAddEdge {
   fromNode: string;
   toNode: string;
   isDirected: boolean;
+  weight: string;
 }
 
 function SimpleDialog(props: SimpleDialogProps) {
@@ -79,6 +81,8 @@ function SimpleDialog(props: SimpleDialogProps) {
   const [chosenFromNode, setFromNode] = React.useState('');
 
   const [chosenToNode, setToNode] = React.useState('');
+
+  const [chosenEdgeWeight, setEdgeWeight] = React.useState('');
 
   const [isDirected, setDirection] = React.useState(true);
 
@@ -94,16 +98,20 @@ function SimpleDialog(props: SimpleDialogProps) {
     setDirection(event.target.checked);
   };
 
+  const handleEdgeWeight = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setEdgeWeight(event.target.value as string);
+  };
+
   const handleClose = (e: any) => {
-    console.log(e.target.innerText);
     if (e.target.innerText === 'ADD') {
-      onClose({fromNode: chosenFromNode, toNode: chosenToNode, isDirected: isDirected});
+      onClose({fromNode: chosenFromNode, toNode: chosenToNode, isDirected: isDirected, weight: chosenEdgeWeight});
     } else {
-      onClose({fromNode: '', toNode: '', isDirected: isDirected});
+      onClose({fromNode: '', toNode: '', isDirected: isDirected, weight: ''});
     }
     setFromNode('');
     setToNode('');
     setDirection(true);
+    setEdgeWeight('');
   };
 
   let nodeOptions = []
@@ -136,6 +144,14 @@ function SimpleDialog(props: SimpleDialogProps) {
           {nodeOptions}
         </Select>
       </FormControl>
+      <TextField
+        className={classes.formControlAddEdge}
+        id="edge-weight"
+        label="Weight"
+        type="number"
+        onChange={handleEdgeWeight}
+        value={chosenEdgeWeight}
+      />
       <FormControlLabel
         control={
           <Switch
@@ -184,7 +200,7 @@ const AlgorithmSetting = (props: any) => {
     const handleCloseDialog = (edge: IAddEdge) => {
       setOpenDialog(false);
       if (edge.fromNode !== '' && edge.toNode !== '') {
-        props.addEdge(+edge.fromNode, +edge.toNode, edge.isDirected);
+        props.addEdge(+edge.fromNode, +edge.toNode, edge.isDirected, edge.weight );
       }
     };
 
@@ -240,7 +256,7 @@ const AlgorithmSetting = (props: any) => {
             </Select>
           </FormControl>
           <div>
-            <Button className={classes.executeAlgorithmBtn} variant="contained" onClick={() => {props.clearGraph()}}>
+            <Button className={classes.executeAlgorithmBtn} variant="contained" onClick={() => { props.clearGraph() }}>
               Clear
             </Button>
             <Button className={classes.executeAlgorithmBtn} variant="contained" color="primary" onClick={() => handleExecuteAlgorithm()}>

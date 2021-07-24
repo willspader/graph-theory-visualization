@@ -43,7 +43,7 @@ class Home extends React.Component<any, any> {
         });
     }
 
-    addEdge(fromNode: number, toNode: number, isDirected: boolean) {
+    addEdge(fromNode: number, toNode: number, isDirected: boolean, weight: string) {
         let oldGraphState = this.state.graphStruct;
 
         const u = oldGraphState.graph.nodes[fromNode];
@@ -51,8 +51,13 @@ class Home extends React.Component<any, any> {
 
         if (!u || !v) return;
 
-        const edge = { source: u.id, target: v.id, directed: isDirected };
-
+        let edge: any;
+        if (weight !== '') {
+            edge = { source: u.id, target: v.id, directed: isDirected, displayWeight: weight };
+        } else {
+            edge = { source: u.id, target: v.id, directed: isDirected };
+        }
+        
         oldGraphState.graph.addEdge(edge);
 
         this.setState({
