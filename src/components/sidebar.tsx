@@ -134,6 +134,7 @@ const SideBar = (props: any) => {
             nodes={props.nodes} 
             addEdge={props.addEdge} 
             addNode={props.addNode}
+            changeGraphDirection={props.changeGraphDirection}
           />
         </div>
       </Drawer>

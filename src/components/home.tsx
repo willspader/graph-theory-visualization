@@ -12,10 +12,12 @@ class Home extends React.Component<any, any> {
 
         this.addNode = this.addNode.bind(this);
         this.addEdge = this.addEdge.bind(this);
+        this.handleGraphDirection = this.handleGraphDirection.bind(this);
         this.clearGraph = this.clearGraph.bind(this);
 
         this.state = {
-            graphStruct: null
+            graphStruct: null,
+            isDirected: true
         };
     }
 
@@ -43,7 +45,7 @@ class Home extends React.Component<any, any> {
         });
     }
 
-    addEdge(fromNode: number, toNode: number, isDirected: boolean, weight: string) {
+    addEdge(fromNode: number, toNode: number, weight: string) {
         let oldGraphState = this.state.graphStruct;
 
         const u = oldGraphState.graph.nodes[fromNode];
@@ -53,15 +55,21 @@ class Home extends React.Component<any, any> {
 
         let edge: any;
         if (weight !== '') {
-            edge = { source: u.id, target: v.id, directed: isDirected, displayWeight: weight };
+            edge = { source: u.id, target: v.id, directed: this.state.isDirected, displayWeight: weight };
         } else {
-            edge = { source: u.id, target: v.id, directed: isDirected };
+            edge = { source: u.id, target: v.id, directed: this.state.isDirected };
         }
         
         oldGraphState.graph.addEdge(edge);
 
         this.setState({
             graphStruct: oldGraphState.update()
+        });
+    }
+
+    handleGraphDirection(isDirected: boolean) {
+        this.setState({
+            isDirected: isDirected
         });
     }
 
@@ -102,6 +110,7 @@ class Home extends React.Component<any, any> {
                         nodes={this.state.graphStruct !== null ? this.state.graphStruct.graph.nodes.length : 0} 
                         addEdge={this.addEdge} 
                         addNode={this.addNode}
+                        changeGraphDirection={this.handleGraphDirection}
                     />
                 </div>
                 <div style={{

@@ -29,9 +29,6 @@ const useStyles = makeStyles((theme: Theme) =>
       margin: theme.spacing(1),
       minWidth: 300,
     },
-    edgeDirectionInterruptor: {
-      margin: theme.spacing(1),
-    },
     dialogTitle: {
       textAlign: 'center'
     },
@@ -70,7 +67,6 @@ interface SimpleDialogProps {
 interface IAddEdge {
   fromNode: string;
   toNode: string;
-  isDirected: boolean;
   weight: string;
 }
 
@@ -84,8 +80,6 @@ function SimpleDialog(props: SimpleDialogProps) {
 
   const [chosenEdgeWeight, setEdgeWeight] = React.useState('');
 
-  const [isDirected, setDirection] = React.useState(true);
-
   const handleSelectFromNode = (event: React.ChangeEvent<{ value: unknown }>) => {
     setFromNode(event.target.value as string);
   };
@@ -94,23 +88,18 @@ function SimpleDialog(props: SimpleDialogProps) {
     setToNode(event.target.value as string);
   };
 
-  const handleEdgeDirection = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setDirection(event.target.checked);
-  };
-
   const handleEdgeWeight = (event: React.ChangeEvent<HTMLInputElement>) => {
     setEdgeWeight(event.target.value as string);
   };
 
   const handleClose = (e: any) => {
     if (e.target.innerText === 'ADD') {
-      onClose({fromNode: chosenFromNode, toNode: chosenToNode, isDirected: isDirected, weight: chosenEdgeWeight});
+      onClose({fromNode: chosenFromNode, toNode: chosenToNode, weight: chosenEdgeWeight});
     } else {
-      onClose({fromNode: '', toNode: '', isDirected: isDirected, weight: ''});
+      onClose({fromNode: '', toNode: '', weight: ''});
     }
     setFromNode('');
     setToNode('');
-    setDirection(true);
     setEdgeWeight('');
   };
 
@@ -152,18 +141,6 @@ function SimpleDialog(props: SimpleDialogProps) {
         onChange={handleEdgeWeight}
         value={chosenEdgeWeight}
       />
-      <FormControlLabel
-        control={
-          <Switch
-            checked={isDirected}
-            onChange={handleEdgeDirection}
-            name="edgeDirection"
-            color="primary"
-          />
-        }
-        className={classes.edgeDirectionInterruptor}
-        label="Directed Edge"
-      />
       <DialogActions>
         <Button onClick={(e) => handleClose(e)} color="primary">
           Close
@@ -183,6 +160,8 @@ const AlgorithmSetting = (props: any) => {
 
     const [chosenStartingNode, setStartingNode] = React.useState('');
 
+    const [isDirected, setDirection] = React.useState(true);
+
     const [openDialog, setOpenDialog] = React.useState(false);
 
     const handleSelectAlgorithm = (event: React.ChangeEvent<{ value: unknown }>) => {
@@ -193,6 +172,11 @@ const AlgorithmSetting = (props: any) => {
         setStartingNode(event.target.value as string);
     };
 
+    const handleEdgeDirection = (event: React.ChangeEvent<HTMLInputElement>) => {
+      setDirection(event.target.checked);
+      props.changeGraphDirection(event.target.checked);
+    };
+
     const handleClickOpenDialog = () => {
       setOpenDialog(true);
     };
@@ -200,7 +184,7 @@ const AlgorithmSetting = (props: any) => {
     const handleCloseDialog = (edge: IAddEdge) => {
       setOpenDialog(false);
       if (edge.fromNode !== '' && edge.toNode !== '') {
-        props.addEdge(+edge.fromNode, +edge.toNode, edge.isDirected, edge.weight );
+        props.addEdge(+edge.fromNode, +edge.toNode, edge.weight );
       }
     };
 
@@ -222,15 +206,29 @@ const AlgorithmSetting = (props: any) => {
     return (
         <div>
           <FormControl className={classes.formControl}>
-              <InputLabel id="algorithm-select-label">Algorithm</InputLabel>
-              <Select
-              labelId="algorithm-select-label"
-              id="algorithm-select"
-              value={chosenAlgorithm}
-              onChange={handleSelectAlgorithm}
-              >
-                  {algorithmOptions}
-              </Select>
+            <FormControlLabel
+              control={
+                <Switch
+                  checked={isDirected}
+                  onChange={handleEdgeDirection}
+                  name="edgeDirection"
+                  color="primary"
+                />
+              }
+              label="Directed Graph"
+              disabled={props.nodes > 0}
+            />
+          </FormControl>
+          <FormControl className={classes.formControl}>
+            <InputLabel id="algorithm-select-label">Algorithm</InputLabel>
+            <Select
+            labelId="algorithm-select-label"
+            id="algorithm-select"
+            value={chosenAlgorithm}
+            onChange={handleSelectAlgorithm}
+            >
+                {algorithmOptions}
+            </Select>
           </FormControl>
             <ListItem >
               <ListItemIcon>
