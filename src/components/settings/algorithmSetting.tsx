@@ -17,6 +17,8 @@ import Switch from '@material-ui/core/Switch';
 import Button from '@material-ui/core/Button';
 import DialogActions from '@material-ui/core/DialogActions';
 import TextField from '@material-ui/core/TextField';
+import Slider from '@material-ui/core/Slider';
+import Typography from '@material-ui/core/Typography';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -54,6 +56,11 @@ const useStyles = makeStyles((theme: Theme) =>
     executeAlgorithmBtn: {
       marginTop: theme.spacing(3),
       marginLeft: theme.spacing(3)
+    },
+    sliderRoot: {
+      marginTop: theme.spacing(3),
+      width: 135,
+      marginLeft: theme.spacing(6.5)
     }
   }),
 );
@@ -162,6 +169,8 @@ const AlgorithmSetting = (props: any) => {
 
     const [isDirected, setDirection] = React.useState(true);
 
+    const [chosenSpeed, setSpeed] = React.useState(2);
+
     const [openDialog, setOpenDialog] = React.useState(false);
 
     const handleSelectAlgorithm = (event: React.ChangeEvent<{ value: unknown }>) => {
@@ -171,6 +180,11 @@ const AlgorithmSetting = (props: any) => {
     const handleSelectStartingNode = (event: React.ChangeEvent<{ value: unknown }>) => {
         setStartingNode(event.target.value as string);
     };
+
+    const handleExecutionSpeed = (speed: number) => {
+      setSpeed(speed);
+      return `${speed}s`;
+    }
 
     const handleEdgeDirection = (event: React.ChangeEvent<HTMLInputElement>) => {
       setDirection(event.target.checked);
@@ -189,9 +203,24 @@ const AlgorithmSetting = (props: any) => {
     };
 
     const handleExecuteAlgorithm = () => {
-      const executionOption = { algorithm: chosenAlgorithm, startingNode: chosenStartingNode }
+      const executionOption = { algorithm: chosenAlgorithm, startingNode: chosenStartingNode, speed: chosenSpeed }
       props.executeVisualization(executionOption);
     }
+
+    const marks = [
+    {
+      value: 1,
+      label: '1s',
+    },
+    {
+      value: 3,
+      label: '3s',
+    },
+    {
+      value: 5,
+      label: '5s',
+    }
+  ];
 
     const algorithms = [Algorithms.BFS, Algorithms.DFS]
     let algorithmOptions = []
@@ -253,6 +282,21 @@ const AlgorithmSetting = (props: any) => {
                 {nodeOptions}
             </Select>
           </FormControl>
+          <div className={classes.sliderRoot}>
+            <Typography id="discrete-slider-small-steps" gutterBottom>
+              Speed
+            </Typography>
+            <Slider
+              defaultValue={2}
+              getAriaValueText={handleExecutionSpeed}
+              aria-labelledby="discrete-slider-small-steps"
+              step={1}
+              marks={marks}
+              min={1}
+              max={5}
+              valueLabelDisplay="auto"
+            />
+          </div>
           <div>
             <Button className={classes.executeAlgorithmBtn} variant="contained" onClick={() => { props.clearGraph() }}>
               Clear

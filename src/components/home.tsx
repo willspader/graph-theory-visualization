@@ -76,6 +76,7 @@ class Home extends React.Component<any, any> {
     executeGraphVisualization(executionOption: AlgorithmChoose) {
         alert(executionOption.algorithm);
         alert(executionOption.startingNode);
+        alert(executionOption.speed);
     }
 
     clearGraph() {
