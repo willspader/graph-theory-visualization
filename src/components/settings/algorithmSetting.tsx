@@ -181,8 +181,11 @@ const AlgorithmSetting = (props: any) => {
         setStartingNode(event.target.value as string);
     };
 
-    const handleExecutionSpeed = (speed: number) => {
-      setSpeed(speed);
+    const handleExecutionSpeed = (event: React.ChangeEvent<{}>, newValue: number | number[]) => {
+      setSpeed(Number(newValue));
+    }
+
+    const handleValueText = (speed: number) => {
       return `${speed}s`;
     }
 
@@ -205,6 +208,11 @@ const AlgorithmSetting = (props: any) => {
     const handleExecuteAlgorithm = () => {
       const executionOption = { algorithm: chosenAlgorithm, startingNode: chosenStartingNode, speed: chosenSpeed }
       props.executeVisualization(executionOption);
+    }
+
+    const handleClearGraph = () => {
+      setStartingNode('');
+      props.clearGraph();
     }
 
     const marks = [
@@ -262,7 +270,7 @@ const AlgorithmSetting = (props: any) => {
             <ListItem >
               <ListItemIcon>
                 <Tooltip title="Add Node">
-                  <AddIcon className={classes.addNodeIcon} aria-label="Add Node" onClick={() => {props.addNode()}}/>
+                  <AddIcon className={classes.addNodeIcon} aria-label="Add Node" onClick={() => { props.addNode() }}/>
                 </Tooltip>
               </ListItemIcon>
               <ListItemIcon>
@@ -288,17 +296,19 @@ const AlgorithmSetting = (props: any) => {
             </Typography>
             <Slider
               defaultValue={2}
-              getAriaValueText={handleExecutionSpeed}
+              getAriaValueText={handleValueText}
               aria-labelledby="discrete-slider-small-steps"
               step={1}
               marks={marks}
               min={1}
               max={5}
+              onChange={handleExecutionSpeed}
+              value={chosenSpeed}
               valueLabelDisplay="auto"
             />
           </div>
           <div>
-            <Button className={classes.executeAlgorithmBtn} variant="contained" onClick={() => { props.clearGraph() }}>
+            <Button className={classes.executeAlgorithmBtn} variant="contained" onClick={() => handleClearGraph()}>
               Clear
             </Button>
             <Button className={classes.executeAlgorithmBtn} variant="contained" color="primary" onClick={() => handleExecuteAlgorithm()}>
