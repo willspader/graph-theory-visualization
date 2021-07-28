@@ -3,6 +3,7 @@ import React from 'react';
 import SideBar from './sidebar';
 import AlgorithmChoose from '../domain/algorithmChoose';
 import Algorithms from '../domain/algorithms';
+import Colors from '../domain/colors';
 
 import greuler from "greuler";
 
@@ -26,7 +27,8 @@ class Home extends React.Component<any, any> {
         this.state = {
             graphStruct: null,
             isDirected: true,
-            speed: null
+            speed: null,
+            executed: true
         };
     }
 
@@ -84,20 +86,31 @@ class Home extends React.Component<any, any> {
 
     executeGraphVisualization(executionOption: AlgorithmChoose) {
         this.setState({
-            speed: executionOption.speed
+            speed: executionOption.speed,
+            executed: true
         });
 
         let adjacencyList: Array<Array<Graph>> = [];
         const instance = this.state.graphStruct;
         for (let i = 0; i < instance.graph.edges.length; i++) {
-            let source = instance.graph.edges[i].source.id
-            let target = instance.graph.edges[i].target.id
+            const source = instance.graph.edges[i].source.id;
+            const target = instance.graph.edges[i].target.id;
+            if (this.state.executed) {
+                const edgeIdx = instance.graph.edges[i].id;
+                instance.selector.getEdge({id: edgeIdx}).attr('stroke', Colors.GREY);
+            }
 
             if (!adjacencyList[source]) {
                 adjacencyList[source] = [];
             }
-
             adjacencyList[source].push({target: target, edgeIdx: i});
+            
+            if (!this.state.isDirected) {
+                if (!adjacencyList[target]) {
+                    adjacencyList[target] = [];
+                }
+                adjacencyList[target].push({target: source, edgeIdx: i});
+            }
         }
 
         if (executionOption.algorithm === Algorithms.DFS) {
@@ -114,7 +127,7 @@ class Home extends React.Component<any, any> {
                 continue;
             }
             const edge = instance.graph.edges[adjacencyList[v][i].edgeIdx];
-            instance.selector.getEdge({id: edge.id}).attr('stroke', '#ff0000');
+            instance.selector.getEdge({id: edge.id}).attr('stroke', Colors.RED);
             await this.delay(this.state.speed);
             this.DFS(instance, adjacencyList, adjacencyList[v][i].target, visited);
         }
@@ -126,7 +139,8 @@ class Home extends React.Component<any, any> {
         oldGraphState.graph.removeNodesByFn((n: { id: number; }) => n.id >= 0);
 
         this.setState({
-            graphStruct: oldGraphState.update()
+            graphStruct: oldGraphState.update(),
+            executed: false
         });
     }
 
