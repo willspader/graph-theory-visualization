@@ -116,12 +116,15 @@ class Home extends React.Component<any, any> {
         if (executionOption.algorithm === Algorithms.DFS) {
             this.DFS(instance, adjacencyList, executionOption.startingNode, []);
         }
+        console.log('grafo lista de adj');
+        console.log(adjacencyList);
     }
 
     async DFS(instance: any, adjacencyList: Array<Array<Graph>>, v: number, visited: boolean[]) {
-        instance.selector.highlightNode(instance.graph.nodes[v]);
+        //instance.selector.highlightNode(instance.graph.nodes[v]);
         await this.delay(this.state.speed);
         visited[v] = true;
+        console.log('vertice visitado = ' + v);
         for (let i = 0; adjacencyList[v] && i < adjacencyList[v].length; i++) {
             if (visited[adjacencyList[v][i].target]) {
                 continue;
@@ -129,7 +132,8 @@ class Home extends React.Component<any, any> {
             const edge = instance.graph.edges[adjacencyList[v][i].edgeIdx];
             instance.selector.getEdge({id: edge.id}).attr('stroke', Colors.RED);
             await this.delay(this.state.speed);
-            this.DFS(instance, adjacencyList, adjacencyList[v][i].target, visited);
+            console.log('vertice atual = ' + v + ' chamando DFS para vertice = ' + adjacencyList[v][i].target);
+            await this.DFS(instance, adjacencyList, adjacencyList[v][i].target, visited);
         }
     }
 
