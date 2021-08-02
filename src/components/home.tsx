@@ -115,25 +115,50 @@ class Home extends React.Component<any, any> {
 
         if (executionOption.algorithm === Algorithms.DFS) {
             this.DFS(instance, adjacencyList, executionOption.startingNode, []);
+        } else if (executionOption.algorithm === Algorithms.BFS) {
+            this.BFS(instance, adjacencyList, executionOption.startingNode);
         }
-        console.log('grafo lista de adj');
-        console.log(adjacencyList);
     }
 
     async DFS(instance: any, adjacencyList: Array<Array<Graph>>, v: number, visited: boolean[]) {
         //instance.selector.highlightNode(instance.graph.nodes[v]);
         await this.delay(this.state.speed);
         visited[v] = true;
-        console.log('vertice visitado = ' + v);
         for (let i = 0; adjacencyList[v] && i < adjacencyList[v].length; i++) {
             if (visited[adjacencyList[v][i].target]) {
                 continue;
             }
             const edge = instance.graph.edges[adjacencyList[v][i].edgeIdx];
             instance.selector.getEdge({id: edge.id}).attr('stroke', Colors.RED);
-            await this.delay(this.state.speed);
-            console.log('vertice atual = ' + v + ' chamando DFS para vertice = ' + adjacencyList[v][i].target);
+            //await this.delay(this.state.speed);
             await this.DFS(instance, adjacencyList, adjacencyList[v][i].target, visited);
+        }
+    }
+
+    async BFS(instance: any, adjacencyList: Array<Array<Graph>>, v: number) {
+        let visited: boolean[] = []
+
+        let queue: number[] = []
+
+        visited[v] = true;
+        queue.push(v);
+
+        //await this.delay(this.state.speed);
+
+        while (queue.length) {
+            let currentNode : number = queue.shift() as number;
+            for (let i = 0; adjacencyList[currentNode] && i < adjacencyList[currentNode].length; i++) {
+                if (visited[adjacencyList[currentNode][i].target]){
+                    continue;
+                }
+                const edge = instance.graph.edges[adjacencyList[currentNode][i].edgeIdx];
+                instance.selector.getEdge({id: edge.id}).attr('stroke', Colors.RED);
+
+                visited[adjacencyList[currentNode][i].target] = true;
+                queue.push(adjacencyList[currentNode][i].target);
+
+                await this.delay(this.state.speed);
+            }
         }
     }
 
