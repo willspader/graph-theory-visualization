@@ -34,7 +34,6 @@ class Home extends React.Component<any, any> {
         this.handleGraphDirection = this.handleGraphDirection.bind(this);
         this.clearGraph = this.clearGraph.bind(this);
         this.executeGraphVisualization = this.executeGraphVisualization.bind(this);
-        this.DFS = this.DFS.bind(this);
 
         this.state = {
             graphStruct: null,
@@ -105,17 +104,17 @@ class Home extends React.Component<any, any> {
         const instance = this.state.graphStruct;
         if (executionOption.algorithm === Algorithms.DFS) {
             let adjacencyList = this.makeUnweightedGraph();
-            this.DFS(instance, adjacencyList, executionOption.startingNode, []);
+            this.dfs(instance, adjacencyList, executionOption.startingNode, []);
         } else if (executionOption.algorithm === Algorithms.BFS) {
             let adjacencyList = this.makeUnweightedGraph();
-            this.BFS(instance, adjacencyList, executionOption.startingNode);
+            this.bfs(instance, adjacencyList, executionOption.startingNode);
         } else if (executionOption.algorithm === Algorithms.DIJKSTRA) {
             let adjacencyList = this.makeWeightedGraph();
-            this.Dijkstra(instance, adjacencyList, executionOption.startingNode, executionOption.targetNode);
+            this.dijkstra(instance, adjacencyList, executionOption.startingNode, executionOption.targetNode);
         }
     }
 
-    async DFS(instance: any, adjacencyList: Array<Array<UnweightedGraph>>, v: number, visited: boolean[]) {
+    async dfs(instance: any, adjacencyList: Array<Array<UnweightedGraph>>, v: number, visited: boolean[]) {
         try {
             //instance.selector.highlightNode(instance.graph.nodes[v]);
             await this.delay(this.state.speed);
@@ -126,7 +125,7 @@ class Home extends React.Component<any, any> {
                 }
                 const edge = instance.graph.edges[adjacencyList[v][i].edgeIdx];
                 instance.selector.getEdge({id: edge.id}).attr('stroke', Colors.RED);
-                await this.DFS(instance, adjacencyList, adjacencyList[v][i].target, visited);
+                await this.dfs(instance, adjacencyList, adjacencyList[v][i].target, visited);
             }
         } catch (e) {
             console.log(e);
@@ -134,7 +133,7 @@ class Home extends React.Component<any, any> {
         }
     }
 
-    async BFS(instance: any, adjacencyList: Array<Array<UnweightedGraph>>, v: number) {
+    async bfs(instance: any, adjacencyList: Array<Array<UnweightedGraph>>, v: number) {
         try {
             let visited: boolean[] = []
 
@@ -166,7 +165,7 @@ class Home extends React.Component<any, any> {
         }
     }
 
-    Dijkstra(instance: any, adjacencyList: Array<Array<WeightedGraph>>, startNode: number, targetNode: number) {
+    async dijkstra(instance: any, adjacencyList: Array<Array<WeightedGraph>>, startNode: number, targetNode: number) {
         try {
             let times: number[] = [];
             times[startNode] = 0;
@@ -187,7 +186,11 @@ class Home extends React.Component<any, any> {
                 let currentNode = shortestStep?.targetNode;
 
                 if (adjacencyList[currentNode!]) {
-                    adjacencyList[currentNode!].forEach(neighbor => {
+                    for (let i = 0; i < adjacencyList[currentNode!].length; i++) {
+                        let neighbor = adjacencyList[currentNode!][i];
+                        const edge = instance.graph.edges[neighbor.edgeIdx];
+                        instance.selector.getEdge({id: edge.id}).attr('stroke', Colors.GREEN);
+                        await this.delay(this.state.speed);
                         let time = Number(times[currentNode!]) + Number(neighbor.weight);
 
                         if (time < times[neighbor.target]) {
@@ -195,7 +198,7 @@ class Home extends React.Component<any, any> {
                             backtrace[neighbor.target] = {node: currentNode!, idx: neighbor.edgeIdx};
                             pq.enqueue({targetNode: neighbor.target, weightToNode: time});
                         }
-                    });
+                    }
                 }
             }
 
