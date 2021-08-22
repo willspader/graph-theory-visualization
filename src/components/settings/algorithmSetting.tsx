@@ -206,6 +206,7 @@ const AlgorithmSetting = (props: any) => {
     };
 
     const handleExecuteAlgorithm = () => {
+      // TODO: TARGET NODE IMPLEMENTATION
       const executionOption = { algorithm: chosenAlgorithm, startingNode: chosenStartingNode, speed: chosenSpeed }
       props.executeVisualization(executionOption);
     }
