@@ -167,6 +167,8 @@ const AlgorithmSetting = (props: any) => {
 
     const [chosenStartingNode, setStartingNode] = React.useState('');
 
+    const [chosenTargetNode, setTargetNode] = React.useState('');
+
     const [isDirected, setDirection] = React.useState(true);
 
     const [chosenSpeed, setSpeed] = React.useState(2);
@@ -179,6 +181,10 @@ const AlgorithmSetting = (props: any) => {
 
     const handleSelectStartingNode = (event: React.ChangeEvent<{ value: unknown }>) => {
         setStartingNode(event.target.value as string);
+    };
+
+    const handleSelectTargetNode = (event: React.ChangeEvent<{ value: unknown }>) => {
+        setTargetNode(event.target.value as string);
     };
 
     const handleExecutionSpeed = (event: React.ChangeEvent<{}>, newValue: number | number[]) => {
@@ -206,14 +212,18 @@ const AlgorithmSetting = (props: any) => {
     };
 
     const handleExecuteAlgorithm = () => {
-      // TODO: TARGET NODE IMPLEMENTATION
-      const executionOption = { algorithm: chosenAlgorithm, startingNode: chosenStartingNode, speed: chosenSpeed }
+      const executionOption = { algorithm: chosenAlgorithm, startingNode: chosenStartingNode, targetNode: chosenTargetNode, speed: chosenSpeed }
       props.executeVisualization(executionOption);
     }
 
     const handleClearGraph = () => {
       setStartingNode('');
+      setTargetNode('');
       props.clearGraph();
+    }
+
+    const mustHasTargetNode = () => {
+      return [Algorithms.BFS.toString(), Algorithms.DFS.toString()].indexOf(chosenAlgorithm) > -1;
     }
 
     const marks = [
@@ -287,6 +297,18 @@ const AlgorithmSetting = (props: any) => {
             id="starting-node-select"
             value={chosenStartingNode}
             onChange={handleSelectStartingNode}
+            >
+                {nodeOptions}
+            </Select>
+          </FormControl>
+          <FormControl className={classes.formControl}>
+            <InputLabel id="target-node-select-label">Target Node</InputLabel>
+            <Select
+            labelId="target-node-select-label"
+            id="target-node-select"
+            value={chosenTargetNode}
+            onChange={handleSelectTargetNode}
+            disabled={mustHasTargetNode()}
             >
                 {nodeOptions}
             </Select>

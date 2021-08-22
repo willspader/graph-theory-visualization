@@ -6,6 +6,7 @@ import Algorithms from '../domain/algorithms';
 import Colors from '../domain/colors';
 
 import greuler from "greuler";
+import PriorityQueue from '../data-structure/priorityQueue';
 
 interface UnweightedGraph {
     target: number;
@@ -15,7 +16,12 @@ interface UnweightedGraph {
 interface WeightedGraph {
     target: number;
     edgeIdx: number;
-    weight: Number;
+    weight: number;
+}
+
+interface edgeIdx {
+    node: number;
+    idx: number;
 }
 
 class Home extends React.Component<any, any> {
@@ -110,49 +116,105 @@ class Home extends React.Component<any, any> {
     }
 
     async DFS(instance: any, adjacencyList: Array<Array<UnweightedGraph>>, v: number, visited: boolean[]) {
-        //instance.selector.highlightNode(instance.graph.nodes[v]);
-        await this.delay(this.state.speed);
-        visited[v] = true;
-        for (let i = 0; adjacencyList[v] && i < adjacencyList[v].length; i++) {
-            if (visited[adjacencyList[v][i].target]) {
-                continue;
+        try {
+            //instance.selector.highlightNode(instance.graph.nodes[v]);
+            await this.delay(this.state.speed);
+            visited[v] = true;
+            for (let i = 0; adjacencyList[v] && i < adjacencyList[v].length; i++) {
+                if (visited[adjacencyList[v][i].target]) {
+                    continue;
+                }
+                const edge = instance.graph.edges[adjacencyList[v][i].edgeIdx];
+                instance.selector.getEdge({id: edge.id}).attr('stroke', Colors.RED);
+                await this.DFS(instance, adjacencyList, adjacencyList[v][i].target, visited);
             }
-            const edge = instance.graph.edges[adjacencyList[v][i].edgeIdx];
-            instance.selector.getEdge({id: edge.id}).attr('stroke', Colors.RED);
-            //await this.delay(this.state.speed);
-            await this.DFS(instance, adjacencyList, adjacencyList[v][i].target, visited);
+        } catch (e) {
+            console.log(e);
+            return;
         }
     }
 
     async BFS(instance: any, adjacencyList: Array<Array<UnweightedGraph>>, v: number) {
-        let visited: boolean[] = []
+        try {
+            let visited: boolean[] = []
 
-        let queue: number[] = []
+            let queue: number[] = []
 
-        visited[v] = true;
-        queue.push(v);
+            visited[v] = true;
+            queue.push(v);
 
-        //await this.delay(this.state.speed);
+            await this.delay(this.state.speed);
 
-        while (queue.length) {
-            let currentNode : number = queue.shift() as number;
-            for (let i = 0; adjacencyList[currentNode] && i < adjacencyList[currentNode].length; i++) {
-                if (visited[adjacencyList[currentNode][i].target]){
-                    continue;
+            while (queue.length) {
+                let currentNode : number = queue.shift() as number;
+                for (let i = 0; adjacencyList[currentNode] && i < adjacencyList[currentNode].length; i++) {
+                    if (visited[adjacencyList[currentNode][i].target]){
+                        continue;
+                    }
+                    const edge = instance.graph.edges[adjacencyList[currentNode][i].edgeIdx];
+                    instance.selector.getEdge({id: edge.id}).attr('stroke', Colors.RED);
+
+                    visited[adjacencyList[currentNode][i].target] = true;
+                    queue.push(adjacencyList[currentNode][i].target);
+
+                    await this.delay(this.state.speed);
                 }
-                const edge = instance.graph.edges[adjacencyList[currentNode][i].edgeIdx];
-                instance.selector.getEdge({id: edge.id}).attr('stroke', Colors.RED);
-
-                visited[adjacencyList[currentNode][i].target] = true;
-                queue.push(adjacencyList[currentNode][i].target);
-
-                await this.delay(this.state.speed);
             }
+        } catch (e) {
+            console.log(e);
+            return;
         }
     }
 
     Dijkstra(instance: any, adjacencyList: Array<Array<WeightedGraph>>, startNode: number, targetNode: number) {
-        console.log(adjacencyList);
+        try {
+            let times: number[] = [];
+            times[startNode] = 0;
+            let nodes = instance.graph.nodes;
+            nodes.forEach((node: any) => {
+                if (node.id !== startNode) {
+                    times[Number(node.id)] = Infinity;
+                }
+            });
+
+            let backtrace: edgeIdx[] = [];
+
+            let pq = new PriorityQueue();
+            pq.enqueue({targetNode: startNode, weightToNode: 0});
+            
+            while (!pq.isEmpty()) {
+                let shortestStep = pq.dequeue();
+                let currentNode = shortestStep?.targetNode;
+
+                if (adjacencyList[currentNode!]) {
+                    adjacencyList[currentNode!].forEach(neighbor => {
+                        let time = Number(times[currentNode!]) + Number(neighbor.weight);
+
+                        if (time < times[neighbor.target]) {
+                            times[neighbor.target] = time;
+                            backtrace[neighbor.target] = {node: currentNode!, idx: neighbor.edgeIdx};
+                            pq.enqueue({targetNode: neighbor.target, weightToNode: time});
+                        }
+                    });
+                }
+            }
+
+            let pathIdx = [];
+            let lastStep = targetNode;
+
+            while(lastStep !== startNode) {
+                pathIdx.unshift(backtrace[lastStep].idx);
+                lastStep = backtrace[lastStep].node;
+            }
+
+            pathIdx.forEach(edgeIdx => {
+                const edge = instance.graph.edges[edgeIdx];
+                instance.selector.getEdge({id: edge.id}).attr('stroke', Colors.RED);
+            });
+        } catch (e) {
+            console.log(e);
+            return;
+        }
     }
 
     clearGraph() {
@@ -216,7 +278,7 @@ class Home extends React.Component<any, any> {
         for (let i = 0; i < instance.graph.edges.length; i++) {
             const source = instance.graph.edges[i].source.id;
             const target = instance.graph.edges[i].target.id;
-            const weight = instance.graph.edges[i].displayWeight;
+            const weight = instance.graph.edges[i].displayWeight ? instance.graph.edges[i].displayWeight : 1;
             if (this.state.executed) {
                 const edgeIdx = instance.graph.edges[i].id;
                 instance.selector.getEdge({id: edgeIdx}).attr('stroke', Colors.GREY);

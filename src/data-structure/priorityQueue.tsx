@@ -28,7 +28,7 @@ class PriorityQueue {
     }
 
     isEmpty() {
-        return this.collection.length == 0;
+        return this.collection.length === 0;
     }
 }
 
