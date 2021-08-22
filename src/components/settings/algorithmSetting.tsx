@@ -230,7 +230,7 @@ const AlgorithmSetting = (props: any) => {
     }
   ];
 
-    const algorithms = [Algorithms.BFS, Algorithms.DFS]
+    const algorithms = [Algorithms.BFS, Algorithms.DFS, Algorithms.DIJKSTRA]
     let algorithmOptions = []
     for (let i = 0; i < algorithms.length; i++) {
         algorithmOptions.push(<MenuItem key={algorithms[i]} value={algorithms[i]}> {algorithms[i]} </MenuItem>)

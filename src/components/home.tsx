@@ -7,9 +7,15 @@ import Colors from '../domain/colors';
 
 import greuler from "greuler";
 
-interface Graph {
+interface UnweightedGraph {
     target: number;
     edgeIdx: number;
+}
+
+interface WeightedGraph {
+    target: number;
+    edgeIdx: number;
+    weight: Number;
 }
 
 class Home extends React.Component<any, any> {
@@ -90,37 +96,20 @@ class Home extends React.Component<any, any> {
             executed: true
         });
 
-        let adjacencyList: Array<Array<Graph>> = [];
         const instance = this.state.graphStruct;
-        for (let i = 0; i < instance.graph.edges.length; i++) {
-            const source = instance.graph.edges[i].source.id;
-            const target = instance.graph.edges[i].target.id;
-            if (this.state.executed) {
-                const edgeIdx = instance.graph.edges[i].id;
-                instance.selector.getEdge({id: edgeIdx}).attr('stroke', Colors.GREY);
-            }
-
-            if (!adjacencyList[source]) {
-                adjacencyList[source] = [];
-            }
-            adjacencyList[source].push({target: target, edgeIdx: i});
-            
-            if (!this.state.isDirected) {
-                if (!adjacencyList[target]) {
-                    adjacencyList[target] = [];
-                }
-                adjacencyList[target].push({target: source, edgeIdx: i});
-            }
-        }
-
         if (executionOption.algorithm === Algorithms.DFS) {
+            let adjacencyList = this.makeUnweightedGraph();
             this.DFS(instance, adjacencyList, executionOption.startingNode, []);
         } else if (executionOption.algorithm === Algorithms.BFS) {
+            let adjacencyList = this.makeUnweightedGraph();
             this.BFS(instance, adjacencyList, executionOption.startingNode);
+        } else if (executionOption.algorithm === Algorithms.DIJKSTRA) {
+            let adjacencyList = this.makeWeightedGraph();
+            this.Dijkstra(instance, adjacencyList, executionOption.startingNode, executionOption.targetNode);
         }
     }
 
-    async DFS(instance: any, adjacencyList: Array<Array<Graph>>, v: number, visited: boolean[]) {
+    async DFS(instance: any, adjacencyList: Array<Array<UnweightedGraph>>, v: number, visited: boolean[]) {
         //instance.selector.highlightNode(instance.graph.nodes[v]);
         await this.delay(this.state.speed);
         visited[v] = true;
@@ -135,7 +124,7 @@ class Home extends React.Component<any, any> {
         }
     }
 
-    async BFS(instance: any, adjacencyList: Array<Array<Graph>>, v: number) {
+    async BFS(instance: any, adjacencyList: Array<Array<UnweightedGraph>>, v: number) {
         let visited: boolean[] = []
 
         let queue: number[] = []
@@ -160,6 +149,10 @@ class Home extends React.Component<any, any> {
                 await this.delay(this.state.speed);
             }
         }
+    }
+
+    Dijkstra(instance: any, adjacencyList: Array<Array<WeightedGraph>>, startNode: number, targetNode: number) {
+        console.log(adjacencyList);
     }
 
     clearGraph() {
@@ -189,6 +182,59 @@ class Home extends React.Component<any, any> {
         return new Promise(function(resolve){
             setTimeout(resolve,n*1000);
         });
+    }
+
+    makeUnweightedGraph() {
+        let adjacencyList: Array<Array<UnweightedGraph>> = [];
+        const instance = this.state.graphStruct;
+        for (let i = 0; i < instance.graph.edges.length; i++) {
+            const source = instance.graph.edges[i].source.id;
+            const target = instance.graph.edges[i].target.id;
+            if (this.state.executed) {
+                const edgeIdx = instance.graph.edges[i].id;
+                instance.selector.getEdge({id: edgeIdx}).attr('stroke', Colors.GREY);
+            }
+
+            if (!adjacencyList[source]) {
+                adjacencyList[source] = [];
+            }
+            adjacencyList[source].push({target: target, edgeIdx: i});
+            
+            if (!this.state.isDirected) {
+                if (!adjacencyList[target]) {
+                    adjacencyList[target] = [];
+                }
+                adjacencyList[target].push({target: source, edgeIdx: i});
+            }
+        }
+        return adjacencyList;
+    }
+
+    makeWeightedGraph() {
+        let adjacencyList: Array<Array<WeightedGraph>> = [];
+        const instance = this.state.graphStruct;
+        for (let i = 0; i < instance.graph.edges.length; i++) {
+            const source = instance.graph.edges[i].source.id;
+            const target = instance.graph.edges[i].target.id;
+            const weight = instance.graph.edges[i].displayWeight;
+            if (this.state.executed) {
+                const edgeIdx = instance.graph.edges[i].id;
+                instance.selector.getEdge({id: edgeIdx}).attr('stroke', Colors.GREY);
+            }
+
+            if (!adjacencyList[source]) {
+                adjacencyList[source] = [];
+            }
+            adjacencyList[source].push({target: target, edgeIdx: i, weight: weight});
+            
+            if (!this.state.isDirected) {
+                if (!adjacencyList[target]) {
+                    adjacencyList[target] = [];
+                }
+                adjacencyList[target].push({target: source, edgeIdx: i, weight: weight});
+            }
+        }
+        return adjacencyList;
     }
 
     render() {
