@@ -19,6 +19,13 @@ interface WeightedGraph {
     weight: number;
 }
 
+interface Edge {
+    source: number;
+    target: number;
+    weight: number;
+    edgeId: number;
+}
+
 interface edgeIdx {
     node: number;
     idx: number;
@@ -111,12 +118,14 @@ class Home extends React.Component<any, any> {
         } else if (executionOption.algorithm === Algorithms.DIJKSTRA) {
             let adjacencyList = this.makeWeightedGraph();
             this.dijkstra(instance, adjacencyList, executionOption.startingNode, executionOption.targetNode);
+        } else if (executionOption.algorithm === Algorithms.BELLMAN_FORD) {
+            let edgeList = this.makeEdgeListGraph();
+            this.bellmanFord(instance, edgeList, executionOption.startingNode, executionOption.targetNode);
         }
     }
 
     async dfs(instance: any, adjacencyList: Array<Array<UnweightedGraph>>, v: number, visited: boolean[]) {
         try {
-            //instance.selector.highlightNode(instance.graph.nodes[v]);
             await this.delay(this.state.speed);
             visited[v] = true;
             for (let i = 0; adjacencyList[v] && i < adjacencyList[v].length; i++) {
@@ -220,6 +229,44 @@ class Home extends React.Component<any, any> {
         }
     }
 
+    bellmanFord(instance: any, edgeList: Array<Edge>, startNode: number, targetNode: number) {
+        let dist: number[] = [];
+        dist[startNode] = 0;
+        let nodes = instance.graph.nodes;
+        nodes.forEach((node: any) => {
+            if (node.id !== startNode) {
+                dist[Number(node.id)] = Infinity;
+            }
+        });
+
+        let nodesLength = instance.graph.nodes.length;
+        for (let i = 1; i <= nodesLength; i++) {
+            for (let j = 0; j < edgeList.length; j++) {
+                let source = edgeList[j].source;
+                let target = edgeList[j].target;
+                let weight = Number(edgeList[j].weight);
+                if (dist[source] !== Infinity && dist[source] + weight < dist[target]) {
+                    dist[target] = Number(dist[source]) + Number(weight);
+                }
+            }
+        }
+
+        for (let i = 0; i < edgeList.length; i++) {
+            let source = edgeList[i].source;
+            let target = edgeList[i].target;
+            let weight = edgeList[i].weight;
+            if (dist[source] !== Infinity && dist[source] + weight < dist[target]) {
+                console.log("negative weight cycle");
+                return;
+            }
+        }
+
+        // printing dist from startNode
+        for (let i = 0; i < nodesLength; i++) {
+            console.log(i + ' - dist = ' + dist[i]);
+        }
+    }
+
     clearGraph() {
         let oldGraphState = this.state.graphStruct;
         
@@ -300,6 +347,23 @@ class Home extends React.Component<any, any> {
             }
         }
         return adjacencyList;
+    }
+
+    makeEdgeListGraph() {
+        let edgeList: Array<Edge> = [];
+        const instance = this.state.graphStruct;
+        for (let i = 0; i < instance.graph.edges.length; i++) {
+            const source = instance.graph.edges[i].source.id;
+            const target = instance.graph.edges[i].target.id;
+            const weight = instance.graph.edges[i].displayWeight ? instance.graph.edges[i].displayWeight : 1;
+            const edgeId = instance.graph.edges[i].id;
+            if (this.state.executed) {
+
+                instance.selector.getEdge({id: edgeId}).attr('stroke', Colors.GREY);
+            }
+            edgeList.push({source: source, target: target, weight: weight, edgeId: edgeId});
+        }
+        return edgeList;
     }
 
     render() {

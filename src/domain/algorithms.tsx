@@ -1,7 +1,8 @@
 enum Algorithms {
     BFS = "BFS",
     DFS = "DFS",
-    DIJKSTRA = "Dijkstra"
+    DIJKSTRA = "Dijkstra",
+    BELLMAN_FORD = "Bellman-Ford"
 }
 
 export default Algorithms
