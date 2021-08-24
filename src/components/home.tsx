@@ -26,7 +26,7 @@ interface Edge {
     edgeId: number;
 }
 
-interface edgeIdx {
+interface EdgeIdx {
     node: number;
     idx: number;
 }
@@ -111,16 +111,16 @@ class Home extends React.Component<any, any> {
         const instance = this.state.graphStruct;
         if (executionOption.algorithm === Algorithms.DFS) {
             let adjacencyList = this.makeUnweightedGraph();
-            this.dfs(instance, adjacencyList, executionOption.startingNode, []);
+            this.dfs(instance, adjacencyList, executionOption.startingNode, []).then(() => console.log('finish dfs'));
         } else if (executionOption.algorithm === Algorithms.BFS) {
             let adjacencyList = this.makeUnweightedGraph();
-            this.bfs(instance, adjacencyList, executionOption.startingNode);
+            this.bfs(instance, adjacencyList, executionOption.startingNode).then(() => console.log('finish bfs'));
         } else if (executionOption.algorithm === Algorithms.DIJKSTRA) {
             let adjacencyList = this.makeWeightedGraph();
-            this.dijkstra(instance, adjacencyList, executionOption.startingNode, executionOption.targetNode);
+            this.dijkstra(instance, adjacencyList, executionOption.startingNode, executionOption.targetNode).then(() => console.log('finish dijkstra'));
         } else if (executionOption.algorithm === Algorithms.BELLMAN_FORD) {
             let edgeList = this.makeEdgeListGraph();
-            this.bellmanFord(instance, edgeList, executionOption.startingNode, executionOption.targetNode);
+            this.bellmanFord(instance, edgeList, executionOption.startingNode, executionOption.targetNode).then(() => console.log('finish bellmanFord'));
         }
     }
 
@@ -185,7 +185,7 @@ class Home extends React.Component<any, any> {
                 }
             });
 
-            let backtrace: edgeIdx[] = [];
+            let backtrace: EdgeIdx[] = [];
 
             let pq = new PriorityQueue();
             pq.enqueue({targetNode: startNode, weightToNode: 0});
@@ -229,41 +229,61 @@ class Home extends React.Component<any, any> {
         }
     }
 
-    bellmanFord(instance: any, edgeList: Array<Edge>, startNode: number, targetNode: number) {
-        let dist: number[] = [];
-        dist[startNode] = 0;
-        let nodes = instance.graph.nodes;
-        nodes.forEach((node: any) => {
-            if (node.id !== startNode) {
-                dist[Number(node.id)] = Infinity;
-            }
-        });
+    async bellmanFord(instance: any, edgeList: Array<Edge>, startNode: number, targetNode: number) {
+        try {
+            let dist: number[] = [];
+            dist[startNode] = 0;
+            let nodes = instance.graph.nodes;
+            nodes.forEach((node: any) => {
+                if (node.id !== startNode) {
+                    dist[Number(node.id)] = Infinity;
+                }
+            });
 
-        let nodesLength = instance.graph.nodes.length;
-        for (let i = 1; i <= nodesLength; i++) {
-            for (let j = 0; j < edgeList.length; j++) {
-                let source = edgeList[j].source;
-                let target = edgeList[j].target;
-                let weight = Number(edgeList[j].weight);
-                if (dist[source] !== Infinity && dist[source] + weight < dist[target]) {
-                    dist[target] = Number(dist[source]) + Number(weight);
+            let backtrace: EdgeIdx[] = [];
+
+            let nodesLength = instance.graph.nodes.length;
+            for (let i = 1; i <= nodesLength; i++) {
+                for (let j = 0; j < edgeList.length; j++) {
+                    let source = edgeList[j].source;
+                    let target = edgeList[j].target;
+                    let weight = Number(edgeList[j].weight);
+
+                    if (dist[source] !== Infinity && dist[source] + weight < dist[target]) {
+                        dist[target] = Number(dist[source]) + Number(weight);
+                        backtrace[target] = {node: source, idx: edgeList[j].edgeId}
+                    }
+
+                    let color = i % 2 === 0 ? Colors.GREEN : Colors.PURPLE;
+                    instance.selector.getEdge({id: edgeList[j].edgeId}).attr('stroke', color);
+                    await this.delay(Math.floor(this.state.speed/2));
                 }
             }
-        }
 
-        for (let i = 0; i < edgeList.length; i++) {
-            let source = edgeList[i].source;
-            let target = edgeList[i].target;
-            let weight = edgeList[i].weight;
-            if (dist[source] !== Infinity && dist[source] + weight < dist[target]) {
-                console.log("negative weight cycle");
-                return;
+            for (let i = 0; i < edgeList.length; i++) {
+                let source = edgeList[i].source;
+                let target = edgeList[i].target;
+                let weight = Number(edgeList[i].weight);
+                if (dist[source] !== Infinity && dist[source] + weight < dist[target]) {
+                    console.log("negative weight cycle");
+                    return;
+                }
             }
-        }
 
-        // printing dist from startNode
-        for (let i = 0; i < nodesLength; i++) {
-            console.log(i + ' - dist = ' + dist[i]);
+            let pathIdx = [];
+            let lastStep = targetNode;
+
+            while(lastStep !== startNode) {
+                pathIdx.unshift(backtrace[lastStep].idx);
+                lastStep = backtrace[lastStep].node;
+            }
+
+            pathIdx.forEach(edgeIdx => {
+                instance.selector.getEdge({id: edgeIdx}).attr('stroke', Colors.RED);
+            });
+        } catch (e) {
+            console.log(e);
+            return;
         }
     }
 
