@@ -121,6 +121,9 @@ class Home extends React.Component<any, any> {
         } else if (executionOption.algorithm === Algorithms.BELLMAN_FORD) {
             let edgeList = this.makeEdgeListGraph();
             this.bellmanFord(instance, edgeList, executionOption.startingNode, executionOption.targetNode).then(() => console.log('finish bellmanFord'));
+        } else if (executionOption.algorithm === Algorithms.KRUSKAL) {
+            let edgeList = this.makeEdgeListGraph();
+            this.kruskal(instance, edgeList);
         }
     }
 
@@ -285,6 +288,11 @@ class Home extends React.Component<any, any> {
             console.log(e);
             return;
         }
+    }
+
+    kruskal(instance: any, edgeList: Array<Edge>) {
+        console.log(instance);
+        console.log(edgeList);
     }
 
     clearGraph() {

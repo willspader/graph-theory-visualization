@@ -222,8 +222,12 @@ const AlgorithmSetting = (props: any) => {
       props.clearGraph();
     }
 
+    const mustHasStartNode = () => {
+      return [Algorithms.KRUSKAL.toString()].indexOf(chosenAlgorithm) === -1;
+    }
+
     const mustHasTargetNode = () => {
-      return [Algorithms.BFS.toString(), Algorithms.DFS.toString()].indexOf(chosenAlgorithm) > -1;
+      return [Algorithms.BFS.toString(), Algorithms.DFS.toString(), Algorithms.KRUSKAL.toString()].indexOf(chosenAlgorithm) === -1;
     }
 
     const marks = [
@@ -241,7 +245,7 @@ const AlgorithmSetting = (props: any) => {
     }
   ];
 
-    const algorithms = [Algorithms.BFS, Algorithms.DFS, Algorithms.DIJKSTRA, Algorithms.BELLMAN_FORD]
+    const algorithms = [Algorithms.BFS, Algorithms.DFS, Algorithms.DIJKSTRA, Algorithms.BELLMAN_FORD, Algorithms.KRUSKAL]
     let algorithmOptions = []
     for (let i = 0; i < algorithms.length; i++) {
         algorithmOptions.push(<MenuItem key={algorithms[i]} value={algorithms[i]}> {algorithms[i]} </MenuItem>)
@@ -297,6 +301,7 @@ const AlgorithmSetting = (props: any) => {
             id="starting-node-select"
             value={chosenStartingNode}
             onChange={handleSelectStartingNode}
+            disabled={!mustHasStartNode()}
             >
                 {nodeOptions}
             </Select>
@@ -308,7 +313,7 @@ const AlgorithmSetting = (props: any) => {
             id="target-node-select"
             value={chosenTargetNode}
             onChange={handleSelectTargetNode}
-            disabled={mustHasTargetNode()}
+            disabled={!mustHasTargetNode()}
             >
                 {nodeOptions}
             </Select>
