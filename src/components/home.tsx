@@ -31,6 +31,11 @@ interface EdgeIdx {
     idx: number;
 }
 
+interface UnionFindParentRank {
+    parent: number;
+    rank: number;
+}
+
 class Home extends React.Component<any, any> {
 
     constructor(props: any) {
@@ -123,7 +128,7 @@ class Home extends React.Component<any, any> {
             this.bellmanFord(instance, edgeList, executionOption.startingNode, executionOption.targetNode).then(() => console.log('finish bellmanFord'));
         } else if (executionOption.algorithm === Algorithms.KRUSKAL) {
             let edgeList = this.makeEdgeListGraph();
-            this.kruskal(instance, edgeList);
+            this.kruskal(instance, edgeList).then(() => console.log('finish kruskal'));
         }
     }
 
@@ -290,9 +295,62 @@ class Home extends React.Component<any, any> {
         }
     }
 
-    kruskal(instance: any, edgeList: Array<Edge>) {
-        console.log(instance);
-        console.log(edgeList);
+    async kruskal(instance: any, edgeList: Array<Edge>) {
+        try {
+            let sortedEdges: Array<Edge> = edgeList.sort((a, b) => Number(a.weight) - Number(b.weight));
+
+            let mst: number[] = [];
+            let components: UnionFindParentRank[] = [];
+
+            let nodes = instance.graph.nodes;
+            for (let i = 0; i < nodes.length; i++) {
+                components.push({parent: i, rank: 0});
+            }
+
+            let edgeCount = 0;
+            let idx = 0;
+
+            while (edgeCount < nodes.length - 1) {
+                let sourceRoot = await this.find(components, sortedEdges[idx].source);
+                let targetRoot = await this.find(components, sortedEdges[idx].target);
+
+                if (sourceRoot !== targetRoot) {
+                    mst.push(sortedEdges[idx].edgeId);
+                    edgeCount = edgeCount + 1;
+                    await this.union(components, sourceRoot, targetRoot);
+                }
+
+                idx = idx + 1;
+            }
+
+            mst.forEach(edgeIdx => {
+                instance.selector.getEdge({id: edgeIdx}).attr('stroke', Colors.RED);
+            });
+        } catch (e) {
+            console.log(e);
+            return;
+        }
+    }
+
+    async find(components: UnionFindParentRank[], element: number): Promise<number> {
+        if (components[element].parent === element) {
+            return element
+        }
+        return await this.find(components, components[element].parent)
+    }
+
+    async union(components: UnionFindParentRank[], elementX: number, elementY: number) {
+        let rootX = await this.find(components, elementX);
+        let rootY = await this.find(components, elementY);
+
+        if (components[rootX].rank < components[rootY].rank) {
+            components[rootX].parent = rootY;
+        } else if (components[rootX].rank > components[rootY].rank) {
+            components[rootY].parent = rootX;
+        } else {
+            components[rootY].parent = rootX;
+            components[rootX].rank = components[rootX].rank + 1;
+        }
     }
 
     clearGraph() {
