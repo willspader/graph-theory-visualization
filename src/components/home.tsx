@@ -314,6 +314,9 @@ class Home extends React.Component<any, any> {
                 let sourceRoot = await this.find(components, sortedEdges[idx].source);
                 let targetRoot = await this.find(components, sortedEdges[idx].target);
 
+                instance.selector.getEdge({id: sortedEdges[idx].edgeId}).attr('stroke', Colors.GREEN);
+                await this.delay(this.state.speed);
+
                 if (sourceRoot !== targetRoot) {
                     mst.push(sortedEdges[idx].edgeId);
                     edgeCount = edgeCount + 1;
@@ -323,6 +326,10 @@ class Home extends React.Component<any, any> {
                 idx = idx + 1;
             }
 
+            edgeList.forEach(edge => {
+                instance.selector.getEdge({id: edge.edgeId}).attr('stroke', Colors.GREY);
+            });
+            
             mst.forEach(edgeIdx => {
                 instance.selector.getEdge({id: edgeIdx}).attr('stroke', Colors.RED);
             });
