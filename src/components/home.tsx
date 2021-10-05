@@ -7,6 +7,7 @@ import Colors from '../domain/colors';
 
 import greuler from "greuler";
 import PriorityQueue from '../data-structure/priorityQueue';
+import Message from './message';
 
 interface UnweightedGraph {
     target: number;
@@ -46,12 +47,15 @@ class Home extends React.Component<any, any> {
         this.handleGraphDirection = this.handleGraphDirection.bind(this);
         this.clearGraph = this.clearGraph.bind(this);
         this.executeGraphVisualization = this.executeGraphVisualization.bind(this);
+        this.updateFinishAlgorithmState = this.updateFinishAlgorithmState.bind(this);
 
         this.state = {
             graphStruct: null,
             isDirected: true,
             speed: null,
-            executed: true
+            executed: true,
+            start: false,
+            finish: false
         };
     }
 
@@ -110,26 +114,56 @@ class Home extends React.Component<any, any> {
     executeGraphVisualization(executionOption: AlgorithmChoose) {
         this.setState({
             speed: executionOption.speed,
-            executed: true
+            executed: true,
+            start: true,
+            finish: false
+        }, () => {
+            setTimeout( () => {
+                this.setState({
+                    start: false
+                });
+            }, 2000)
         });
 
         const instance = this.state.graphStruct;
         if (executionOption.algorithm === Algorithms.DFS) {
             let adjacencyList = this.makeUnweightedGraph();
-            this.dfs(instance, adjacencyList, executionOption.startingNode, []).then(() => console.log('finish dfs'));
+            this.dfs(instance, adjacencyList, executionOption.startingNode, []).then(() => {
+                this.updateFinishAlgorithmState();
+            });
         } else if (executionOption.algorithm === Algorithms.BFS) {
             let adjacencyList = this.makeUnweightedGraph();
-            this.bfs(instance, adjacencyList, executionOption.startingNode).then(() => console.log('finish bfs'));
+            this.bfs(instance, adjacencyList, executionOption.startingNode).then(() => {
+                this.updateFinishAlgorithmState();
+            });
         } else if (executionOption.algorithm === Algorithms.DIJKSTRA) {
             let adjacencyList = this.makeWeightedGraph();
-            this.dijkstra(instance, adjacencyList, executionOption.startingNode, executionOption.targetNode).then(() => console.log('finish dijkstra'));
+            this.dijkstra(instance, adjacencyList, executionOption.startingNode, executionOption.targetNode).then(() => {
+                this.updateFinishAlgorithmState();
+            });
         } else if (executionOption.algorithm === Algorithms.BELLMAN_FORD) {
             let edgeList = this.makeEdgeListGraph();
-            this.bellmanFord(instance, edgeList, executionOption.startingNode, executionOption.targetNode).then(() => console.log('finish bellmanFord'));
+            this.bellmanFord(instance, edgeList, executionOption.startingNode, executionOption.targetNode).then(() => {
+                this.updateFinishAlgorithmState();
+            });
         } else if (executionOption.algorithm === Algorithms.KRUSKAL) {
             let edgeList = this.makeEdgeListGraph();
-            this.kruskal(instance, edgeList).then(() => console.log('finish kruskal'));
+            this.kruskal(instance, edgeList).then(() => {
+                this.updateFinishAlgorithmState();
+            });
         }
+    }
+
+    updateFinishAlgorithmState() {
+        this.setState({
+            finish: true
+        }, () => {
+            setTimeout( () => {
+                this.setState({
+                    finish: false
+                });
+            }, 4000)
+        });
     }
 
     async dfs(instance: any, adjacencyList: Array<Array<UnweightedGraph>>, v: number, visited: boolean[]) {
@@ -473,11 +507,18 @@ class Home extends React.Component<any, any> {
                     />
                 </div>
                 <div style={{
+                            marginLeft: '70%',
+                            marginTop: '5%',
+                            width: '25%'
+                    }}>
+                    <Message show={this.state.start || this.state.finish} message={this.state.start ? 'Iniciando Execução' : 'Execução Finalizada'} />
+                </div> 
+                <div style={{
                     position: 'absolute', left: '50%', top: '50%',
                     transform: 'translate(-50%, -50%)',
                     height: '100vh',
                     width: '100%'
-                }}> 
+                }}>
                     <div id="app" style={{
                         height: '100vh', 
                         width: '100%'
