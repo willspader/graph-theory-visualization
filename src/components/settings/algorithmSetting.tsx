@@ -230,7 +230,13 @@ const AlgorithmSetting = (props: any) => {
 
     const handleAlgorithmExpContentText = () => {
       if (chosenAlgorithm === Algorithms.BFS.toString()) {
-        return <p>Explicação de BFS</p>
+        return (
+          <div style={{
+            color: 'black'
+          }}>
+            <p>Explicação de BFS</p>
+          </div>
+        )
       } else if (chosenAlgorithm === Algorithms.DFS.toString()) {
         return <p> Explicação de DFS </p>
       } else {
