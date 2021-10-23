@@ -19,6 +19,7 @@ import DialogActions from '@material-ui/core/DialogActions';
 import TextField from '@material-ui/core/TextField';
 import Slider from '@material-ui/core/Slider';
 import Typography from '@material-ui/core/Typography';
+import AlgorithmExplanation from './algorithmExplanation';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -175,6 +176,8 @@ const AlgorithmSetting = (props: any) => {
 
     const [openDialog, setOpenDialog] = React.useState(false);
 
+    const [openDialogAlgorithmExp, setOpenDialogAlgorithmExp] = React.useState(false);
+
     const handleSelectAlgorithm = (event: React.ChangeEvent<{ value: unknown }>) => {
         setAlgorithm(event.target.value as string);
     };
@@ -211,9 +214,18 @@ const AlgorithmSetting = (props: any) => {
       }
     };
 
-    const handleExecuteAlgorithm = () => {
-      const executionOption = { algorithm: chosenAlgorithm, startingNode: chosenStartingNode, targetNode: chosenTargetNode, speed: chosenSpeed }
+    const handleOpenDialogAlgorithmExp = () => {
+      setOpenDialogAlgorithmExp(true);
+    }
+
+    const handleCloseDialogAlgorithmExp = () => {
+      setOpenDialogAlgorithmExp(false);
+      const executionOption = { algorithm: chosenAlgorithm, startingNode: chosenStartingNode, targetNode: chosenTargetNode, speed: chosenSpeed };
       props.executeVisualization(executionOption);
+    }
+
+    const handleExecuteAlgorithm = () => {
+      handleOpenDialogAlgorithmExp();
     }
 
     const handleClearGraph = () => {
@@ -344,6 +356,7 @@ const AlgorithmSetting = (props: any) => {
             </Button>
           </div>
           <SimpleDialog nodes={props.nodes} open={openDialog} onClose={handleCloseDialog} />
+          <AlgorithmExplanation algorithm={chosenAlgorithm} open={openDialogAlgorithmExp} onClose={handleCloseDialogAlgorithmExp} />
         </div>
     );
 }
