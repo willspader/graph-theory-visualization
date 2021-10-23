@@ -228,6 +228,16 @@ const AlgorithmSetting = (props: any) => {
       handleOpenDialogAlgorithmExp();
     }
 
+    const handleAlgorithmExpContentText = () => {
+      if (chosenAlgorithm === Algorithms.BFS.toString()) {
+        return <p>Explicação de BFS</p>
+      } else if (chosenAlgorithm === Algorithms.DFS.toString()) {
+        return <p> Explicação de DFS </p>
+      } else {
+        return <p>DWAHIDUHAIUDHAIUDWH</p>
+      }
+    }
+
     const handleClearGraph = () => {
       setStartingNode('');
       setTargetNode('');
@@ -356,7 +366,7 @@ const AlgorithmSetting = (props: any) => {
             </Button>
           </div>
           <SimpleDialog nodes={props.nodes} open={openDialog} onClose={handleCloseDialog} />
-          <AlgorithmExplanation algorithm={chosenAlgorithm} open={openDialogAlgorithmExp} onClose={handleCloseDialogAlgorithmExp} />
+          <AlgorithmExplanation algorithm={chosenAlgorithm} contentText={handleAlgorithmExpContentText()} open={openDialogAlgorithmExp} onClose={handleCloseDialogAlgorithmExp} />
         </div>
     );
 }

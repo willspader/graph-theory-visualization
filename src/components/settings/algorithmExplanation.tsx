@@ -7,13 +7,14 @@ import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 
 interface AlgorithmExplanationProps {
+    contentText: JSX.Element;
     algorithm: string;
     open: boolean;
     onClose: () => void;
 }
 
 export default function AlgorithmExplanation(props: AlgorithmExplanationProps) {
-    const { algorithm, onClose, open } = props;
+    const { algorithm, contentText, onClose, open } = props;
     const [scroll] = React.useState<DialogProps['scroll']>('paper');
 
     const handleClose = () => {
@@ -22,37 +23,37 @@ export default function AlgorithmExplanation(props: AlgorithmExplanationProps) {
 
     const descriptionElementRef = React.useRef<HTMLElement>(null);
     React.useEffect(() => {
-    if (open) {
-        const { current: descriptionElement } = descriptionElementRef;
-        if (descriptionElement !== null) {
-        descriptionElement.focus();
+        if (open) {
+            const { current: descriptionElement } = descriptionElementRef;
+            if (descriptionElement !== null) {
+                descriptionElement.focus();
+            }
         }
-    }
     }, [open]);
 
     return (
-    <div>
-        <Dialog
-        open={open}
-        onClose={handleClose}
-        scroll={scroll}
-        aria-labelledby="scroll-dialog-title"
-        aria-describedby="scroll-dialog-description"
-        >
-        <DialogTitle id="scroll-dialog-title">Subscribe</DialogTitle>
-        <DialogContent dividers={scroll === 'paper'}>
-            <DialogContentText
-            id="scroll-dialog-description"
-            ref={descriptionElementRef}
-            tabIndex={-1}
+        <div>
+            <Dialog
+            open={open}
+            onClose={handleClose}
+            scroll={scroll}
+            aria-labelledby="scroll-dialog-title"
+            aria-describedby="scroll-dialog-description"
             >
-            {algorithm}
-            </DialogContentText>
-        </DialogContent>
-        <DialogActions>
-            <Button onClick={handleClose}>Fechar</Button>
-        </DialogActions>
-        </Dialog>
-    </div>
+            <DialogTitle id="scroll-dialog-title">{algorithm} - Explicação</DialogTitle>
+            <DialogContent dividers={scroll === 'paper'}>
+                <DialogContentText
+                id="scroll-dialog-description"
+                ref={descriptionElementRef}
+                tabIndex={-1}
+                >
+                    {contentText}
+                </DialogContentText>
+            </DialogContent>
+            <DialogActions>
+                <Button onClick={handleClose}>Fechar</Button>
+            </DialogActions>
+            </Dialog>
+        </div>
     );
 }
