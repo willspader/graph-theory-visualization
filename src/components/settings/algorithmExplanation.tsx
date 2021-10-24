@@ -40,7 +40,7 @@ export default function AlgorithmExplanation(props: AlgorithmExplanationProps) {
             aria-labelledby="scroll-dialog-title"
             aria-describedby="scroll-dialog-description"
             >
-            <DialogTitle id="scroll-dialog-title">{algorithm} - Explicação</DialogTitle>
+            <DialogTitle id="scroll-dialog-title">{algorithm} - Considerações</DialogTitle>
             <DialogContent dividers={scroll === 'paper'}>
                 <DialogContentText
                 id="scroll-dialog-description"
