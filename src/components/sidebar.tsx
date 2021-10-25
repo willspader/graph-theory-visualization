@@ -108,7 +108,7 @@ const SideBar = (props: any) => {
             <MenuIcon />
           </IconButton>
           <Typography variant="h6" noWrap>
-            Graph Theory Visualization
+            Visualizador de Algoritmos em Grafos
           </Typography>
         </Toolbar>
       </AppBar>

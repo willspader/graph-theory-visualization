@@ -54,9 +54,13 @@ const useStyles = makeStyles((theme: Theme) =>
       fontSize: 30,
       cursor: "pointer"
     },
-    executeAlgorithmBtn: {
+    executeAlgorithmRemoveGraphBtn: {
       marginTop: theme.spacing(3),
-      marginLeft: theme.spacing(3)
+      marginLeft: theme.spacing(5.5)
+    },
+    executeAlgorithmExecuteBtn: {
+      marginTop: theme.spacing(3),
+      marginLeft: theme.spacing(8.2)
     },
     sliderRoot: {
       marginTop: theme.spacing(3),
@@ -118,9 +122,9 @@ function SimpleDialog(props: SimpleDialogProps) {
 
   return (
     <Dialog onClose={handleClose} aria-labelledby="simple-dialog-title" open={open}>
-      <DialogTitle className={classes.dialogTitle} id="simple-dialog-title">Add Edge</DialogTitle>
+      <DialogTitle className={classes.dialogTitle} id="simple-dialog-title">Adicionar Aresta</DialogTitle>
       <FormControl className={classes.formControlAddEdge}>
-        <InputLabel id="from-node-select-label">From Node</InputLabel>
+        <InputLabel id="from-node-select-label">Vértice de Saída</InputLabel>
         <Select
           labelId="from-node-select-label"
           id="from-node-select"
@@ -131,7 +135,7 @@ function SimpleDialog(props: SimpleDialogProps) {
         </Select>
       </FormControl>
       <FormControl className={classes.formControlAddEdge}>
-        <InputLabel id="to-node-select-label">To Node</InputLabel>
+        <InputLabel id="to-node-select-label">Vértice de Entrada</InputLabel>
         <Select
           labelId="to-node-select-label"
           id="to-node-select"
@@ -144,17 +148,17 @@ function SimpleDialog(props: SimpleDialogProps) {
       <TextField
         className={classes.formControlAddEdge}
         id="edge-weight"
-        label="Weight"
+        label="Peso"
         type="number"
         onChange={handleEdgeWeight}
         value={chosenEdgeWeight}
       />
       <DialogActions>
         <Button onClick={(e) => handleClose(e)} color="primary">
-          Close
+          Cancelar
         </Button>
         <Button onClick={(e) => handleClose(e)} color="primary" autoFocus>
-          Add
+          Adicionar
         </Button>
       </DialogActions>
     </Dialog>
@@ -379,12 +383,12 @@ const AlgorithmSetting = (props: any) => {
                   color="primary"
                 />
               }
-              label="Directed Graph"
+              label="Grafo Dirigido"
               disabled={props.nodes > 0}
             />
           </FormControl>
           <FormControl className={classes.formControl}>
-            <InputLabel id="algorithm-select-label">Algorithm</InputLabel>
+            <InputLabel id="algorithm-select-label">Algoritmo</InputLabel>
             <Select
             labelId="algorithm-select-label"
             id="algorithm-select"
@@ -396,18 +400,18 @@ const AlgorithmSetting = (props: any) => {
           </FormControl>
             <ListItem >
               <ListItemIcon>
-                <Tooltip title="Add Node">
-                  <AddIcon className={classes.addNodeIcon} aria-label="Add Node" onClick={() => { props.addNode() }}/>
+                <Tooltip title="Adicionar Vértice">
+                  <AddIcon className={classes.addNodeIcon} aria-label="Adicionar Vértice" onClick={() => { props.addNode() }}/>
                 </Tooltip>
               </ListItemIcon>
               <ListItemIcon>
-                <Tooltip title="Add Edge">
-                  <SyncAltIcon className={classes.addEdgeIcon} aria-label="Add Edge" onClick={() => handleClickOpenDialog()} />
+                <Tooltip title="Adicionar Aresta">
+                  <SyncAltIcon className={classes.addEdgeIcon} aria-label="Adicionar Aresta" onClick={() => handleClickOpenDialog()} />
                 </Tooltip>
               </ListItemIcon>
             </ListItem>
           <FormControl className={classes.formControl}>
-            <InputLabel id="starting-node-select-label">Starting Node</InputLabel>
+            <InputLabel id="starting-node-select-label">Vértice Inicial</InputLabel>
             <Select
             labelId="starting-node-select-label"
             id="starting-node-select"
@@ -419,7 +423,7 @@ const AlgorithmSetting = (props: any) => {
             </Select>
           </FormControl>
           <FormControl className={classes.formControl}>
-            <InputLabel id="target-node-select-label">Target Node</InputLabel>
+            <InputLabel id="target-node-select-label">Vértice Destino</InputLabel>
             <Select
             labelId="target-node-select-label"
             id="target-node-select"
@@ -432,7 +436,7 @@ const AlgorithmSetting = (props: any) => {
           </FormControl>
           <div className={classes.sliderRoot}>
             <Typography id="discrete-slider-small-steps" gutterBottom>
-              Speed
+              Velocidade
             </Typography>
             <Slider
               defaultValue={2}
@@ -448,11 +452,11 @@ const AlgorithmSetting = (props: any) => {
             />
           </div>
           <div>
-            <Button className={classes.executeAlgorithmBtn} variant="contained" onClick={() => handleClearGraph()}>
-              Clear
+            <Button className={classes.executeAlgorithmExecuteBtn} variant="contained" color="primary" onClick={() => handleExecuteAlgorithm()}>
+              Executar
             </Button>
-            <Button className={classes.executeAlgorithmBtn} variant="contained" color="primary" onClick={() => handleExecuteAlgorithm()}>
-              Execute
+            <Button className={classes.executeAlgorithmRemoveGraphBtn} variant="contained" onClick={() => handleClearGraph()}>
+              Remover Grafo
             </Button>
           </div>
           <SimpleDialog nodes={props.nodes} open={openDialog} onClose={handleCloseDialog} />
