@@ -234,13 +234,17 @@ const AlgorithmSetting = (props: any) => {
           <div style={{
             color: 'black'
           }}>
+            <h4>Proposta</h4>
             <p>O algoritmo BFS visita todos os vértices de um grafo e explora apenas arestas que ainda não foram visitadas.</p>
             <p>Pode ser executado para grafos dirigidos e não-dirigidos. </p>
             <p>Geralmente é utilizado para descobrir todos vértices que podem ser alcançados a partir de um vértice inicial, sendo essa a execução utilizada nessa ferramenta de visualização.</p>
+            <p>BFS não resolve um problema específico, é um algoritmo intermediário que pode ser utilizado para resolver diversos problemas na computação, como por exemplo, motores de recomendações até K níveis de distância.</p>
+            <h4>Execução</h4>
             <p>Todos os vértices adjacentes de um vértice <i>v</i> são descobertos antes de continuar explorando o grafo, sendo oposto do DFS.</p>
             <p>Há possibilidade de adaptá-lo para determinar o caminho mais curto entre dois vértices de um grafo sem peso nas arestas.</p>
-            <p>BFS não resolve um problema específico, é um algoritmo intermediário que pode ser utilizado para resolver diversos problemas na computação, como por exemplo, motores de recomendações até K níveis de distância.</p>
+            <h4>Complexidade de Tempo</h4>
             <p>A complexidade de tempo de execução por Grande-O é O(V + E), sendo V o número de vértices e E o número de arestas.</p>
+            <h4>Considerações da Ferramenta</h4>
             <p>Caso possua, o peso das arestas é ignorado na execução.</p>
           </div>
         )
@@ -249,13 +253,17 @@ const AlgorithmSetting = (props: any) => {
             <div style={{
               color: 'black'
             }}>
+              <h4>Proposta</h4>
               <p>O algoritmo DFS visita todos os vértices de um grafo e explora apenas arestas que ainda não foram visitadas. </p>
               <p>Pode ser executado para grafos dirigidos e não-dirigidos. </p>
               <p>Geralmente é utilizado para descobrir todos vértices que podem ser alcançados a partir de um vértice inicial, sendo essa a execução utilizada nessa ferramenta de visualização. </p>
               <p>Frequentemente é adaptado para gerar uma ordem topológica dos vértices do grafo, sendo utilizada para situações onde há uma ordem de execução de tarefas a ser respeitada. </p>
-              <p>Sempre que possível, DFS aprofunda até o último nível de um caminho através das arestas. Quando não há outra aresta para percorrer, o algoritmo realiza backtracking para visitar todas arestas dos vértices anteriores.  </p>
               <p>Não é possível descobrir o caminho mais curto entre dois vértices de um grafo sem ou com peso nas arestas. </p>
+              <h4>Execução</h4>
+              <p>Sempre que possível, DFS aprofunda até o último nível de um caminho através das arestas. Quando não há outra aresta para percorrer, o algoritmo realiza backtracking para visitar todas arestas dos vértices anteriores.  </p>
+              <h4>Complexidade de Tempo</h4>
               <p>A complexidade de tempo de execução por Grande-O é O(V + E), sendo V o número de vértices e E o número de arestas.</p>
+              <h4>Considerações da Ferramenta</h4>
               <p>Caso possua, o peso das arestas é ignorado na execução.</p>
             </div>
           )
@@ -264,12 +272,17 @@ const AlgorithmSetting = (props: any) => {
             <div style={{
               color: 'black'
             }}>
+              <h4>Proposta</h4>
               <p>O algoritmo de Dijkstra visa resolver o problema de caminho mais curto em um grafo dirigido ou não-dirigido com pesos não-negativos nas arestas. O caminho mais curto é calculado pela soma dos pesos das arestas. </p>
+              <p>É semelhante ao algoritmo de Bellman-Ford e melhor complexidade de tempo, no entanto, Dijkstra falha em grafos com pesos negativos nas arestas. </p>
+              <h4>Execução</h4>
               <p>Quando é executado a partir de um vértice inicial <i>v</i>, é calculado o caminho mais curto entre <i>v</i> e todos os outros vértices que podem ser alcançados. </p>
               <p>Após término do algoritmo, geralmente busca-se o caminho mais curto entre dois vértices específicos, sendo essa a proposta de implementação nessa ferramenta. </p>
+              <h4>Complexidade de Tempo</h4>
               <p>A complexidade de tempo de execução por Grande-O é O(E * log(V)), sendo E o número de arestas e V o número de vértices.</p>
-              <p>Possui proposta semelhante ao algoritmo de Bellman-Ford e melhor complexidade de tempo, no entanto, Dijkstra falha em grafos com pesos negativos nas arestas. </p>
+              <h4>Considerações da Ferramenta</h4>
               <p>Arestas sem peso terão valor 1 inferido nos cálculos.</p>
+              <p>Para visualizar o caminho mais curto entre dois vértices, escolha o vértice inicial e final no menu à esquerda.</p>
             </div>
           )
       } else if (chosenAlgorithm === Algorithms.BELLMAN_FORD.toString()) {
@@ -277,12 +290,17 @@ const AlgorithmSetting = (props: any) => {
             <div style={{
               color: 'black'
             }}>
+              <h4>Proposta</h4>
               <p>O algoritmo de Bellman-Ford visa resolver o problema de caminho mais curto em um grafo dirigido ou não-dirigido e permitindo pesos negativos nas arestas. O caminho mais curto é calculado pela soma dos pesos das arestas. </p>
+              <p>Por possuir tempo de execução maior do que Dijkstra, é recomendado utilizar apenas quando há possibilidade de pesos negativos nas arestas, pois o algoritmo de Dijkstra falha nesse quesito.</p>
+              <h4>Execução</h4>
               <p>Quando é executado a partir de um vértice inicial <i>v</i>, é calculado o caminho mais curto entre <i>v</i> e todos os outros vértices que podem ser alcançados. </p>
               <p>Após término do algoritmo, geralmente busca-se o caminho mais curto entre dois vértices específicos, sendo essa a proposta de implementação nessa ferramenta. </p>
+              <h4>Complexidade de Tempo</h4>
               <p>A complexidade de tempo de execução por Grande-O é O(V * E), sendo V o número de vértices e E o número de arestas.</p>
-              <p>Por possuir tempo de execução maior do que Dijkstra, é recomendado utilizar apenas quando há possibilidade de pesos negativos nas arestas, pois o algoritmo de Dijkstra falha nesse quesito.</p>
+              <h4>Considerações da Ferramenta</h4>
               <p>Arestas sem peso terão valor 1 inferido nos cálculos.</p>
+              <p>Para visualizar o caminho mais curto entre dois vértices, escolha o vértice inicial e final no menu à esquerda.</p>
             </div>
           )
       } else if (chosenAlgorithm === Algorithms.KRUSKAL.toString()) {
@@ -290,11 +308,15 @@ const AlgorithmSetting = (props: any) => {
             <div style={{
               color: 'black'
             }}>
+              <h4>Proposta</h4>
               <p>O algoritmo de Kruskal encontra a árvore geradora mínima com menor peso em um grafo não-dirigido. </p>
               <p>Uma árvore geradora é um sub-grafo com todos as arestas que conectam todos os vértices do grafo original. </p>
+              <h4>Execução</h4>
               <p>Nesse caso, busca-se o conjunto de arestas com menor peso e que conecte todos os vértices do grafo.</p>
               <p>O peso de uma árvore geradora mínima é dado pela soma do peso de todas as arestas.</p>
+              <h4>Complexidade de Tempo</h4>
               <p>A complexidade de tempo de execução por Grande-O é O(E log E), sendo E o número de arestas.</p>
+              <h4>Considerações da Ferramenta</h4>
               <p>A ferramenta permite execução em grafos dirigidos para fins didáticos. </p>
               <p>Arestas sem peso terão valor 1 inferido nos cálculos.</p>
             </div>
