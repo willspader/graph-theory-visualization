@@ -46,6 +46,7 @@ class Home extends React.Component<any, any> {
         this.addEdge = this.addEdge.bind(this);
         this.handleGraphDirection = this.handleGraphDirection.bind(this);
         this.clearGraph = this.clearGraph.bind(this);
+        this.clearExecution = this.clearExecution.bind(this);
         this.executeGraphVisualization = this.executeGraphVisualization.bind(this);
         this.updateFinishAlgorithmState = this.updateFinishAlgorithmState.bind(this);
 
@@ -405,6 +406,18 @@ class Home extends React.Component<any, any> {
         });
     }
 
+    clearExecution() {
+        const instance = this.state.graphStruct;
+        for (let i = 0; i < instance.graph.edges.length; i++) {
+            const edgeIdx = instance.graph.edges[i].id;
+            instance.selector.getEdge({id: edgeIdx}).attr('stroke', Colors.GREY);
+        }
+
+        this.setState({
+            executed: false
+        });
+    }
+
     getElementByIdAsync = (id: string) => new Promise(resolve => {
         const getElement = () => {
             const element = document.getElementById(id);
@@ -485,7 +498,6 @@ class Home extends React.Component<any, any> {
             const weight = instance.graph.edges[i].displayWeight ? instance.graph.edges[i].displayWeight : 1;
             const edgeId = instance.graph.edges[i].id;
             if (this.state.executed) {
-
                 instance.selector.getEdge({id: edgeId}).attr('stroke', Colors.GREY);
             }
             edgeList.push({source: source, target: target, weight: weight, edgeId: edgeId});
@@ -500,6 +512,7 @@ class Home extends React.Component<any, any> {
                     <SideBar 
                         executeVisualization={this.executeGraphVisualization}
                         clearGraph={this.clearGraph}
+                        clearExecution={this.clearExecution}
                         nodes={this.state.graphStruct !== null ? this.state.graphStruct.graph.nodes.length : 0} 
                         addEdge={this.addEdge} 
                         addNode={this.addNode}

@@ -108,7 +108,7 @@ const SideBar = (props: any) => {
             <MenuIcon />
           </IconButton>
           <Typography variant="h6" noWrap>
-            Visualizador de Algoritmos em Grafos
+            VisiGraph - Visualizador de Algoritmos em Grafos
           </Typography>
         </Toolbar>
       </AppBar>
@@ -131,6 +131,7 @@ const SideBar = (props: any) => {
           <AlgorithmSetting 
             executeVisualization={props.executeVisualization}
             clearGraph={props.clearGraph}
+            clearExecution={props.clearExecution}
             nodes={props.nodes} 
             addEdge={props.addEdge} 
             addNode={props.addNode}

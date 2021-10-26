@@ -54,9 +54,13 @@ const useStyles = makeStyles((theme: Theme) =>
       fontSize: 30,
       cursor: "pointer"
     },
-    executeAlgorithmRemoveGraphBtn: {
-      marginTop: theme.spacing(3),
+    clearExecutionGraphBtn: {
+      marginTop: theme.spacing(5),
       marginLeft: theme.spacing(5.5)
+    },
+    removeGraphBtn: {
+      marginTop: theme.spacing(3),
+      marginLeft: theme.spacing(6.3)
     },
     executeAlgorithmExecuteBtn: {
       marginTop: theme.spacing(3),
@@ -105,7 +109,7 @@ function SimpleDialog(props: SimpleDialogProps) {
   };
 
   const handleClose = (e: any) => {
-    if (e.target.innerText === 'ADD') {
+    if (e.target.innerText === 'ADICIONAR') {
       onClose({fromNode: chosenFromNode, toNode: chosenToNode, weight: chosenEdgeWeight});
     } else {
       onClose({fromNode: '', toNode: '', weight: ''});
@@ -157,7 +161,7 @@ function SimpleDialog(props: SimpleDialogProps) {
         <Button onClick={(e) => handleClose(e)} color="primary">
           Cancelar
         </Button>
-        <Button onClick={(e) => handleClose(e)} color="primary" autoFocus>
+        <Button onClick={(e) => handleClose(e)} color="primary">
           Adicionar
         </Button>
       </DialogActions>
@@ -338,6 +342,10 @@ const AlgorithmSetting = (props: any) => {
       props.clearGraph();
     }
 
+    const handleClearExecution = () => {
+      props.clearExecution();
+    }
+
     const mustHasStartNode = () => {
       return [Algorithms.KRUSKAL.toString()].indexOf(chosenAlgorithm) === -1;
     }
@@ -455,7 +463,10 @@ const AlgorithmSetting = (props: any) => {
             <Button className={classes.executeAlgorithmExecuteBtn} variant="contained" color="primary" onClick={() => handleExecuteAlgorithm()}>
               Executar
             </Button>
-            <Button className={classes.executeAlgorithmRemoveGraphBtn} variant="contained" onClick={() => handleClearGraph()}>
+            <Button className={classes.clearExecutionGraphBtn} variant="contained" onClick={() => handleClearExecution()}>
+              Limpar Execução
+            </Button>
+            <Button className={classes.removeGraphBtn} variant="contained" onClick={() => handleClearGraph()}>
               Remover Grafo
             </Button>
           </div>
