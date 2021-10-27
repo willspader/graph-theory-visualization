@@ -319,6 +319,7 @@ const AlgorithmSetting = (props: any) => {
               <h4>Proposta</h4>
               <p>O algoritmo de Kruskal encontra a árvore geradora mínima com menor peso em um grafo não-dirigido. </p>
               <p>Uma árvore geradora é um sub-grafo com todos as arestas que conectam todos os vértices do grafo original. </p>
+              <p>Cada vértice precisa ter ao menos uma areasta.</p>
               <h4>Execução</h4>
               <p>Nesse caso, busca-se o conjunto de arestas com menor peso e que conecte todos os vértices do grafo.</p>
               <p>O peso de uma árvore geradora mínima é dado pela soma do peso de todas as arestas.</p>

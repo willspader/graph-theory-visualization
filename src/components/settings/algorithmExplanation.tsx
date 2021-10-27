@@ -46,7 +46,7 @@ export default function AlgorithmExplanation(props: AlgorithmExplanationProps) {
                 id="scroll-dialog-description"
                 ref={descriptionElementRef}
                 tabIndex={-1}
-                >
+                component="span">
                     {contentText}
                 </DialogContentText>
             </DialogContent>
