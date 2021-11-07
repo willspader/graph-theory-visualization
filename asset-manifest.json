@@ -1,0 +1,26 @@
+{
+  "files": {
+    "main.css": "/graph-theory-visualization/static/css/main.d536a20d.chunk.css",
+    "main.js": "/graph-theory-visualization/static/js/main.83fcb089.chunk.js",
+    "main.js.map": "/graph-theory-visualization/static/js/main.83fcb089.chunk.js.map",
+    "runtime-main.js": "/graph-theory-visualization/static/js/runtime-main.5de85103.js",
+    "runtime-main.js.map": "/graph-theory-visualization/static/js/runtime-main.5de85103.js.map",
+    "static/css/2.c8031052.chunk.css": "/graph-theory-visualization/static/css/2.c8031052.chunk.css",
+    "static/js/2.9bf861ac.chunk.js": "/graph-theory-visualization/static/js/2.9bf861ac.chunk.js",
+    "static/js/2.9bf861ac.chunk.js.map": "/graph-theory-visualization/static/js/2.9bf861ac.chunk.js.map",
+    "static/js/3.a3ecfb70.chunk.js": "/graph-theory-visualization/static/js/3.a3ecfb70.chunk.js",
+    "static/js/3.a3ecfb70.chunk.js.map": "/graph-theory-visualization/static/js/3.a3ecfb70.chunk.js.map",
+    "index.html": "/graph-theory-visualization/index.html",
+    "static/css/2.c8031052.chunk.css.map": "/graph-theory-visualization/static/css/2.c8031052.chunk.css.map",
+    "static/css/main.d536a20d.chunk.css.map": "/graph-theory-visualization/static/css/main.d536a20d.chunk.css.map",
+    "static/js/2.9bf861ac.chunk.js.LICENSE.txt": "/graph-theory-visualization/static/js/2.9bf861ac.chunk.js.LICENSE.txt",
+    "static/media/index.css": "/graph-theory-visualization/static/media/roboto-vietnamese-400-normal.52cebac0.woff2"
+  },
+  "entrypoints": [
+    "static/js/runtime-main.5de85103.js",
+    "static/css/2.c8031052.chunk.css",
+    "static/js/2.9bf861ac.chunk.js",
+    "static/css/main.d536a20d.chunk.css",
+    "static/js/main.83fcb089.chunk.js"
+  ]
+}
