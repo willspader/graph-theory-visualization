@@ -64,7 +64,7 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     executeAlgorithmExecuteBtn: {
       marginTop: theme.spacing(3),
-      marginLeft: theme.spacing(8.2)
+      marginLeft: theme.spacing(9)
     },
     sliderRoot: {
       marginTop: theme.spacing(3),
