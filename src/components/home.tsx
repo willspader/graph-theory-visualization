@@ -128,26 +128,31 @@ class Home extends React.Component<any, any> {
 
         const instance = this.state.graphStruct;
         if (executionOption.algorithm === Algorithms.DFS) {
+            this.clearExecution();
             let adjacencyList = this.makeUnweightedGraph();
             this.dfs(instance, adjacencyList, executionOption.startingNode, []).then(() => {
                 this.updateFinishAlgorithmState();
             });
         } else if (executionOption.algorithm === Algorithms.BFS) {
+            this.clearExecution();
             let adjacencyList = this.makeUnweightedGraph();
             this.bfs(instance, adjacencyList, executionOption.startingNode).then(() => {
                 this.updateFinishAlgorithmState();
             });
         } else if (executionOption.algorithm === Algorithms.DIJKSTRA) {
+            this.clearExecution();
             let adjacencyList = this.makeWeightedGraph();
             this.dijkstra(instance, adjacencyList, executionOption.startingNode, executionOption.targetNode).then(() => {
                 this.updateFinishAlgorithmState();
             });
         } else if (executionOption.algorithm === Algorithms.BELLMAN_FORD) {
+            this.clearExecution();
             let edgeList = this.makeEdgeListGraph();
             this.bellmanFord(instance, edgeList, executionOption.startingNode, executionOption.targetNode).then(() => {
                 this.updateFinishAlgorithmState();
             });
         } else if (executionOption.algorithm === Algorithms.KRUSKAL) {
+            this.clearExecution();
             let edgeList = this.makeEdgeListGraph();
             this.kruskal(instance, edgeList).then(() => {
                 this.updateFinishAlgorithmState();
@@ -219,6 +224,21 @@ class Home extends React.Component<any, any> {
 
     async dijkstra(instance: any, adjacencyList: Array<Array<WeightedGraph>>, startNode: number, targetNode: number) {
         try {
+            let negative = false;
+            adjacencyList.forEach((x: Array<WeightedGraph>) => {
+                x.forEach((y: WeightedGraph) => {
+                    if (y.weight < 0) {
+                        console.log("negative weight edge");
+                        negative = true;
+                    }
+                })
+            })
+
+            if (negative) {
+                alert('Algoritmo de Dijkstra não funciona em grafos com arestas de pesos negativos.');
+                return;
+            }
+
             let times: number[] = [];
             times[startNode] = 0;
             let nodes = instance.graph.nodes;
@@ -261,6 +281,8 @@ class Home extends React.Component<any, any> {
                 pathIdx.unshift(backtrace[lastStep].idx);
                 lastStep = backtrace[lastStep].node;
             }
+
+            this.clearExecution();
 
             pathIdx.forEach(edgeIdx => {
                 const edge = instance.graph.edges[edgeIdx];
@@ -309,6 +331,7 @@ class Home extends React.Component<any, any> {
                 let weight = Number(edgeList[i].weight);
                 if (dist[source] !== Infinity && dist[source] + weight < dist[target]) {
                     console.log("negative weight cycle");
+                    alert('Ciclo negativo encontrado. Não é possível descobrir o caminho mais curto. Pesquise sobre ciclos negativos em grafos.');
                     return;
                 }
             }
@@ -320,6 +343,10 @@ class Home extends React.Component<any, any> {
                 pathIdx.unshift(backtrace[lastStep].idx);
                 lastStep = backtrace[lastStep].node;
             }
+
+            edgeList.forEach(edge => {
+                instance.selector.getEdge({id: edge.edgeId}).attr('stroke', Colors.GREY);
+            });
 
             pathIdx.forEach(edgeIdx => {
                 instance.selector.getEdge({id: edgeIdx}).attr('stroke', Colors.RED);
